@@ -1,0 +1,12 @@
+ <item>
+	<caption>Ward (Anisotropic)</caption>
+	
+	<!-- Parameter -->
+	<input type="float" name="wardanisotropy.shininessX" default="0.1">
+		<caption>Parallel</caption>
+	</input>
+	<input type="float" name="wardanisotropy.shininessY" default="0.5">
+		<caption>Perpendicular</caption>
+	</input>
+	
+</item>

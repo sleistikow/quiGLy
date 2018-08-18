@@ -1,0 +1,105 @@
+<projectWizard>
+	<name>Simple Pipeline</name>
+	<description>Builds a new project that consists of a single render pass. It's configured to render data from a given source.</description>
+	<pages>
+	
+		<!-- Project -->
+		<page type="file">
+			<title>Project</title>
+			<subtitle>Adjust the basic project settings.</subtitle>
+			<allowImport value="true" />
+			<minimumVersion value="330" />
+		</page>
+		
+		<!-- Data Source -->
+		<page type="source" source="model" name="model">
+			<title>Model</title>
+			<subtitle>Load a mesh from a supported file or generates a primitive.</subtitle>
+		</page>
+		
+		<!-- Data Usage -->
+		<page type="custom">
+			<title>Mixer</title>
+			<subtitle>Select the model data that is provided to the shader.</subtitle>
+			<input type="bool" default="true" name="dataNormals">
+				<caption>Use vertex normals</caption>
+			</input>
+			<input type="bool" default="false" name="dataTangents">
+				<dependency source="model.type" value="Model" />
+				<caption>Use vertex tangents</caption>
+			</input>
+			<input type="bool" default="false" name="dataBitangents">
+				<dependency source="model.type" value="Model" />
+				<caption>Use vertex bitangents</caption>
+			</input>
+			<input type="bool" default="false" name="dataColors">
+				<dependency source="model.type" value="Model" />
+				<caption>Use vertex colors</caption>
+			</input>
+			<input type="bool" default="true" name="dataTexture">
+				<caption>Use texture coordinates</caption>
+			</input>
+		</page>	
+		
+		<!-- Vertex Shader -->
+		<page type="custom">
+			<title>Vertex Shader</title>
+			<subtitle>Configure the vertex shader.</subtitle>
+			<input type="bool" default="true" name="defaultVertexShader">
+				<caption>Use default shader code</caption>
+				<description>If checked, default shader code is generated.</description>
+			</input>
+			<input type="bool" default="false" name="useMVP">
+				<dependency source="defaultVertexShader" value="true" />
+				<caption>Enable MVP matrix</caption>
+				<description>If checked, a model view projection uniform block is generated and connected to the vertex shader.</description>
+			</input>
+			<input type="bool" default="false" name="enableCamera">
+				<dependency source="useMVP" value="true" />
+				<caption>Enable camera</caption>
+				<description>If checked, a camera block is generated and connected to the model view projection uniform.</description>
+			</input>
+			<spacer />
+			
+			<input type="code" name="codeVertexShader">
+				<dependency source="defaultVertexShader" value="false" />
+				<caption>Custom Shader Code</caption>
+			</input>
+			<input type="bool" default="true" name="generateVertexInput">
+				<dependency source="defaultVertexShader" value="false" />
+				<caption>Autogenerate input blocks</caption>
+				<description>If checked, the shader's input blocks are automatically created from the code.</description>
+			</input>
+		</page>
+			
+		<!-- Fragment Shader -->
+		<page type="custom">
+			<title>Fragment Shader</title>
+			<subtitle>Configure the fragment shader.</subtitle>
+			<input type="bool" default="true" name="defaultFragmentShader">
+				<caption>Use default shader code</caption>
+				<description>If checked, default shader code is generated.</description>
+			</input>
+			<spacer />
+			
+			<input type="code" name="codeFragmentShader">
+				<dependency source="defaultFragmentShader" value="false" />
+				<caption>Custom Shader Code</caption>
+			</input>
+			<input type="bool" default="true" name="generateFragmentInput">
+				<dependency source="defaultFragmentShader" value="false" />
+				<caption>Autogenerate input blocks</caption>
+				<description>If checked, the shader's input blocks are automatically created from the code.</description>
+			</input>
+		</page>
+		
+		<!-- Output -->
+		<page type="output" name="output">
+			<title>Output</title>
+			<subtitle>Configure the outputs of the render pass.</subtitle>
+			<output output="display" default="true" />
+			<output output="texture" />
+		</page>
+		
+	</pages>
+</projectWizard>

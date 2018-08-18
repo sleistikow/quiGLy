@@ -1,0 +1,18 @@
+ <item>
+	<caption>Cook-Torrance</caption>
+	
+	<!-- Parameter -->
+	<input type="float" name="cooktorrance.roughness" default="0.5">
+		<caption>Roughness</caption>
+		<description>The material's roughness.</description>
+	</input>
+	<input type="float" name="cooktorrance.refraction" default="1.2">
+		<caption>Index Of Refraction</caption>
+		<description>The material's index of refraction.</description>
+	</input>
+	<input type="vec3" name="cooktorrance.fresnel" default="0.5,0.5,0.5" divider=",">
+		<caption>Fresnel</caption>
+		<description>The Fresnel value at angle 0 for the each color.</description>
+	</input>
+	
+</item>

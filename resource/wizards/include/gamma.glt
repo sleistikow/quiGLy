@@ -1,0 +1,11 @@
+//Translate the given color from linear to gamma corrected color space.
+vec4 linearToGamma(vec4 color, float gamma)
+{
+	return vec4(pow(color.rgb, vec3(1.0 / gamma)), color.a);
+}
+
+//Translate the given color from gamma corrected to linear color space.
+vec4 gammaToLinear(vec4 color, float gamma)
+{
+	return vec4(pow(color.rgb, vec3(gamma)), color.a);
+}

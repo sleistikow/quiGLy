@@ -1,0 +1,24 @@
+[include:brdf/glsl/beckmann.glt!shader]
+
+[include:brdf/glsl/cooktorrance.glt!shader]
+
+//Calculate specular using Cook-Torrance.
+vec4 specularCookTorrance(float roughness, vec3 fresnel0, float refraction)
+{
+	//Calculate attenuation.
+	float geometry = 2 * NdotH / LdotH;
+	geometry = min(1.0, min(geometry * NdotV, geometry * NdotL));
+
+	//Calculate distribution.
+	float distribution = beckmannDistribution(roughness, NdotH);
+	
+	//Calculate fresnel.
+	vec3 fresnel = cookTorranceFresnelRGB(fresnel0, refraction, NdotV);
+	
+	//Calculate BRDF.
+	vec3 GDF = geometry * distribution * fresnel;
+	return vec4(GDF / max(M_PI * NdotV * NdotL, M_ZERO), 1.0);
+}
+
+//Convencience specular method.
+vec4 calculateSpecular() { return specularCookTorrance([value:this.roughness], vec3([value:this.fresnel]), [value:this.refraction]); }

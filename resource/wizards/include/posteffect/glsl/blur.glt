@@ -1,0 +1,59 @@
+[if:this.gaussian=true]
+[include:gaussian.glt]
+
+[endif:]
+//Calculate the post effect depending on the texture coordinates.
+vec4 calculatePostEffect(vec2 textureCoordinate)
+{
+	//Specify the parameters.
+	const int tapSize = [value:this.tapSize];
+	const int textureWidth = [value:this.textureWidth];
+	const int textureHeight = [value:this.textureHeight];
+[if:this.gaussian=true]
+	const float sigma = [value:this.deviation];
+[else:]
+	[if:this.direction=both]
+	int total = tapSize * tapSize;
+	[else:]
+	int total = tapSize;
+	[endif:]
+[endif:]
+	
+	//Calculate further parameters.
+	int offset = (tapSize - 1) / 2;
+	vec2 resolution = vec2(1.0 / textureWidth, 1.0 / textureHeight);
+	vec4 color = vec4(0);
+	
+[if:this.direction=both]
+	//Iterate in both directions.
+	for(int x = -offset; x <= offset; x++)
+	for(int y = -offset; y <= offset; y++)	
+[elseif:this.direction=x]
+	//Iterate in x direction only.
+	for(int x = -offset, y = 0; x <= offset; x++)
+[elseif:this.direction=y]
+	//Iterate in y direction only.
+	for(int y = -offset, x = 0; y <= offset; y++)	
+[endif:]
+	{
+		//Calculate the uv coordinates and retrieve the pixel.
+		vec2 uv = textureCoordinate + vec2(x, y) * resolution;
+[if:texture.gammaCorrection=manual]
+		vec4 texColor = gammaToLinear(texture(textureSampler, uv), [value:texture.gammaValue]);
+[else:]
+		vec4 texColor = texture(textureSampler, uv);
+[endif:]
+[if:this.gaussian=true]
+	[if:this.direction=both]
+		color += texColor * calculateGaussian(x, y, sigma);
+	[else:]
+		color += texColor * calculateGaussian([value:this.direction], sigma);
+	[endif:]
+[else:]
+		color += texColor / total;
+[endif:]
+	}
+	
+	//Return the blurred pixel.
+	return color;
+}

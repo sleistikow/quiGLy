@@ -1,0 +1,43 @@
+<projectWizard>
+	<name>Blending Pass</name>
+	<description>Builds a new project that blends multiple textures into one output. This can be used to blend multiple render passes.</description>
+	<pages>
+	
+		<!-- Project -->
+		<page type="file">
+			<title>Project</title>
+			<subtitle>Adjust the basic project settings.</subtitle>
+			<allowImport value="true" />
+			<minimumVersion value="330" />
+		</page>
+		
+		<!-- Blending -->
+		<page type="items" name="blending" autoName="true">
+			<title>Blending</title>
+			<subtitle>Select the textures and specify how they should blend.</subtitle>
+			<item type="blend" naming="texture">
+				<caption>Texture</caption>
+				<input type="source" source="texture" name="texture" mandatory="true" />
+				<spacer />
+				<input type="select" default="multiply" name="operation">
+					<caption>Blend Operation</caption>
+					<description>Specify how the texture is blended.</description>
+					<option value="multiply">Multiply</option>
+					<option value="inverse">Multiply Inverse</option>
+					<option value="add">Add</option>
+					<option value="subtract">Subtract</option>
+				</input>
+			</item>
+		</page>
+			
+			
+		<!-- Output -->
+		<page type="output" name="output">
+			<title>Output</title>
+			<subtitle>Configure the outputs of the render pass.</subtitle>
+			<output output="display" default="true" />
+			<output output="texture" />
+		</page>
+		
+	</pages>
+</projectWizard>

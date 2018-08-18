@@ -1,0 +1,13 @@
+<output source="texture">
+	<caption>Render to texture</caption>
+	<input type="int" default="512" name="textureWidth">
+		<caption>Texture Width</caption>
+	</input>
+	<input type="int" default="512" name="textureHeight">
+		<caption>Texture Height</caption>
+	</input>
+	<input type="bool" default="false" name="depthBuffer">
+		<caption>Render depth buffer to texture</caption>
+		<description>If checked, a texture is used as depth buffer instead of a render buffer.</description>
+	</input>
+</output>

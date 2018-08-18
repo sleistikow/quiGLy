@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/glsl">
+        <file>highlight.xml</file>
+        <file>keywords.xml</file>
+        <file>glsl/buffer.png</file>
+        <file>glsl/func.png</file>
+        <file>glsl/glfunc.png</file>
+        <file>glsl/global.png</file>
+        <file>glsl/glvar.png</file>
+        <file>glsl/in.png</file>
+        <file>glsl/local.png</file>
+        <file>glsl/out.png</file>
+        <file>glsl/uniform.png</file>
+        <file>glsl/glconst.png</file>
+    </qresource>
+</RCC>

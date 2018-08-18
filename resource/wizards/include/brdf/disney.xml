@@ -1,0 +1,10 @@
+<item>
+	<caption>Disney</caption>
+	
+	<!-- Parameter -->
+	<input type="float" name="disney.roughness" default="0.4">
+		<caption>Roughness</caption>
+		<description>The material roughness.</description>
+	</input>
+	
+</item>

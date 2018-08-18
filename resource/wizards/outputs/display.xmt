@@ -1,0 +1,17 @@
+<!-- Display -->
+[connect:this.in#50001>this#50000]
+<Block type="104" id="[id:this]">
+	<Ports>
+		[ports:this]
+	</Ports>
+	<Properties>
+[if:this.gammaCorrection=auto]
+		<Property id="16003">1</Property>
+[else:]
+		<Property id="16003">0</Property>
+[endif:]
+	</Properties>
+</Block>
+
+<!-- Clear -->
+<RenderCommand type="100" id="[id:]" block="[id:this]" />

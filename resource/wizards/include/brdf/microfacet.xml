@@ -1,0 +1,44 @@
+<item>
+	<caption>Microfacet</caption>
+	<spacer />
+	
+	<!-- Geometric Term -->
+	<input type="select" name="microfacet.geometric">
+		<caption>Geometric Term</caption>
+		<option value="cooktorrance">Cook-Torrance</option>
+		<option value="schlick">Schlick Approximation</option>
+		<option value="ggx">GGX</option>
+	</input>
+	<spacer />
+	
+	<!-- Distribution Term -->
+	<input type="select" name="microfacet.distribution">
+		<caption>Distribution Term</caption>
+		<option value="beckmann">Beckmann</option>
+		<option value="ggx">GGX</option>
+	</input>
+	<input type="float" name="microfacet.distribution.roughness" default="0.5">
+		<caption>Roughness</caption>
+		<description>The material's roughness.</description>
+	</input>
+	<spacer />
+	
+	<!-- Fresnel Term -->
+	<input type="select" name="microfacet.fresnel" default="implicit">
+		<caption>Fresnel Term</caption>
+		<option value="implicit">Implicit (Disabled)</option>
+		<option value="cooktorrance">Cook-Torrance Approximation</option>
+		<option value="schlick">Schlick Approximation</option>
+	</input>
+	<input type="float" name="microfacet.fresnel.refraction" default="1.2">
+		<dependency source="microfacet.fresnel" value="implicit" inverse="true" />
+		<caption>Index Of Refraction</caption>
+		<description>The material's index of refraction.</description>
+	</input>
+	<input type="vec3" name="microfacet.fresnel.fresnel" default="0.5,0.5,0.5" divider=",">
+		<dependency source="microfacet.fresnel" value="implicit" inverse="true" />
+		<caption>Fresnel</caption>
+		<description>The Fresnel value at angle 0 for the each color.</description>
+	</input>
+	
+</item>

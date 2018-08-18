@@ -1,0 +1,8 @@
+//Calculate diffuse using Lambert.
+float diffuseLambert()
+{	
+	return NdotL;
+}
+
+//Convencience diffuse method.
+float calculateDiffuse() { return diffuseLambert(); }

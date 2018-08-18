@@ -1,0 +1,129 @@
+#define M_PI 3.141592
+#define M_ZERO 0.000001
+
+out vec4 glColor;
+
+in vec2 vTexture;
+
+[if:targetShader=fragment]
+in vec3 vPositions;
+in vec3 vNormals;
+
+in vec3 vEyePosition;
+[if:scene=single]
+in vec3 vLightPosition;
+[else:]
+	[each:lights]
+in vec3 vLightPosition[value:lights.index];
+	[endeach:]
+[endif:]
+
+//Calculated normals.
+vec3 normal, tangent, bitangent;
+	
+	[if:normal.type!none|height.type!none&height.algorithm.type!tesselation]
+[include:maps/map.glt!shader]
+	
+	[endif:]
+[include:gamma.glt]
+
+[include:brdf/glsl/brdf.glt]
+
+	[if:height.type!none&height.algorithm.type!tesselation]
+[include:maps/parallax.glt:height]
+
+	[endif:]
+//Main entry point.
+void main() 
+{ 
+	//Adjust interpolated normal for BRDF.
+	normal = normalize(vNormals);
+	
+	[if:normal.type!none|height.type!none&height.algorithm.type!tesselation]
+	//Calculate cotangents for mapping.
+	calculateTBN();
+	
+	//Eye direction is required for parallax.
+	toEye = normalize(vEyePosition - vPositions);
+	toEye = tbnMatrix * toEye;
+	
+		[if:height.type!none&height.algorithm.type!tesselation]
+	//Adjust the texture using the parallax map.
+	vec2 parallaxTexture = calculateParallax();
+	
+		[endif:]
+		[if:normal.type!none]
+	//Adjust the normal using the normal map.
+			[if:height.type!none&height.algorithm.type!tesselation]
+	normal = texture(detailSampler, parallaxTexture).rgb;
+			[else:]
+	normal = texture(detailSampler, vTexture).rgb;
+			[endif:]
+	normal = normal * 255.0/127.0 - 128.0/127.0;
+	
+		[endif:]
+	[endif:]	
+	[if:scene=single]
+	//Calculate the directional vectors.
+	calculateDirections(vEyePosition, vLightPosition);
+		[if:normal.type!none|height.type!none&height.algorithm.type!tesselation]
+	halfAngle = tbnMatrix * halfAngle;
+	toLight = tbnMatrix * toLight;
+	toEye = tbnMatrix * toEye;
+		[endif:]
+	calculateAngles();
+	
+	//Run the current BRDF.
+	glColor = calculateBRDF(lightSpecular, lightDiffuse, lightAmbient);
+	[else:]
+	//Base color.
+	glColor = vec4(0);
+	
+		[each:lights]
+	{
+		//Calculate the directional vectors.
+		calculateDirections(vEyePosition, vLightPosition[value:lights.index]);
+		[if:normal.type!none|height.type!none&height.algorithm.type!tesselation]
+		halfAngle = tbnMatrix * halfAngle;
+		toLight = tbnMatrix * toLight;
+		toEye = tbnMatrix * toEye;
+		[endif:]
+		calculateAngles();
+	
+		//Run the current BRDF.
+		glColor += calculateBRDF(lightSpecular[value:lights.index], lightDiffuse[value:lights.index], lightAmbient[value:lights.index]);
+	}
+	
+		[endeach:]
+	[endif:]
+	
+[else:]
+in vec4 vColor;
+
+[include:gamma.glt]
+
+//Main entry point.
+void main()
+{
+	//Forward the interpolated color.
+	glColor = vColor;
+	
+[endif:]
+[if:texture.type!none]
+	//Apply texture using multiplication.
+	[if:height.type!none&height.algorithm.type!tesselation]
+	vec4 texColor = texture(textureSampler, parallaxTexture);
+	[else:]
+	vec4 texColor = texture(textureSampler, vTexture);
+	[endif:]
+	[if:texture.gammaCorrection=manual]
+	texColor = gammaToLinear(texColor, [value:texture.gammaValue]);
+	[endif:]
+	glColor *= texColor;
+	
+[endif:]
+[if:output.display.enabled=true&output.display.gammaCorrection=manual]
+	//Apply gamma correction.
+	glColor = linearToGamma(glColor, [value:output.display.gammaValue]);
+[endif:]
+}

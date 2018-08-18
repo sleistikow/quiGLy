@@ -1,0 +1,196 @@
+<!-- Model Data Source -->
+[connect:source.model#102>dataMixer#100=modelPositions]
+[connect:source.model#103>dataMixer#100=modelNormals]
+[connect:source.model#107>dataMixer#100=modelTexture]
+[connect:source.model#108>indexBuffer#100]
+[source:model]
+
+<!-- Model Mixer -->
+[connect:dataMixer#101>dataBuffer#100]
+<Block type="100" id="[id:dataMixer]">
+	<Properties>
+		<Property id="100" asStruct="0">
+			<MixerLayoutEntry connection="[id:modelPositions]" name="inPositions" />
+			<MixerLayoutEntry connection="[id:modelNormals]" name="inNormals" />
+			<MixerLayoutEntry connection="[id:modelTexture]" name="inTexture" />
+		</Property>
+	</Properties>
+	<Ports>
+		[ports:dataMixer]
+	</Ports>
+</Block>
+
+<!-- Vertex Buffer -->
+[connect:dataBuffer#101>vertexArrayObject#100]
+<Block type="101" id="[id:dataBuffer]">
+	<Ports>
+		[ports:dataBuffer]
+	</Ports>
+</Block>
+
+<!-- VAO -->
+[connect:vertexArrayObject#50001>vertexPuller#50000]
+<Block type="103" id="[id:vertexArrayObject]">
+	<Properties>
+		<Property id="200" reset="[id:vertexArrayObject]" />
+	</Properties>
+	<Ports>
+		[ports:vertexArrayObject]
+	</Ports>
+</Block>
+
+<!-- Index Buffer -->
+[connect:indexBuffer#101>vertexPuller#1000]
+<Block type="101" id="[id:indexBuffer]">
+	<Ports>
+		[ports:indexBuffer]
+	</Ports>
+</Block>
+
+<!-- Vertex Puller -->
+[connect:vertexPuller#50001>vertexShader#50000]
+<Block type="102" id="[id:vertexPuller]">
+	<Ports>
+		[ports:vertexPuller]
+	</Ports>
+</Block>
+
+<!-- MVP Uniform -->
+[connect:mvp#5000>vertexShader#2001:700=modelMatrix]
+[connect:mvp#5001>vertexShader#2001:700=viewMatrix]
+[connect:mvp#5002>vertexShader#2001:700=projectionMatrix]
+<Block type="10000" id="[id:mvp]">
+	<Properties>
+		<Property id="1104">2;2;2</Property>
+	</Properties>
+	<Ports>
+		[ports:mvp]
+	</Ports>
+</Block>
+
+<!-- Camera -->
+[if:enableCamera=true]
+[connect:camera#50001>mvp#50000]
+<Block type="10001" id="[id:camera]">
+	<Ports>
+		[ports:camera]
+	</Ports>
+</Block>
+[endif:]
+
+<!-- Time Uniform -->
+[if:autoRotate=true|lightRotate=true]
+[connect:time#50001>vertexShader#2001:700=time]
+<Block type="3009" id="[id:time]">
+	<Ports>
+		[ports:time]
+	</Ports>
+</Block>
+[endif:]
+
+[if:scene=single]
+	<!-- Light Uniform -->
+	[connect:source.light#5006>vertexShader#2001:700=lightPosition]
+	[if:targetShader=vertex]
+	[connect:source.light#5010>vertexShader#2001:700=lightAmbient]
+	[connect:source.light#5011>vertexShader#2001:700=lightDiffuse]
+	[connect:source.light#5012>vertexShader#2001:700=lightSpecular]
+	[else:]
+	[connect:source.light#5010>fragmentShader#2001:700=lightAmbient]
+	[connect:source.light#5011>fragmentShader#2001:700=lightDiffuse]
+	[connect:source.light#5012>fragmentShader#2001:700=lightSpecular]
+	[endif:]
+	[source:light]
+[else:]
+	[each:lights]
+	<!-- Light Uniform -->
+	[connect:source.lights.light#5006>vertexShader#2001:700=lightPosition[value:lights.index]]
+	[if:targetShader=vertex]
+	[connect:source.lights.light#5010>vertexShader#2001:700=lightAmbient[value:lights.index]]
+	[connect:source.lights.light#5011>vertexShader#2001:700=lightDiffuse[value:lights.index]]
+	[connect:source.lights.light#5012>vertexShader#2001:700=lightSpecular[value:lights.index]]
+	[else:]
+	[connect:source.lights.light#5010>fragmentShader#2001:700=lightAmbient[value:lights.index]]
+	[connect:source.lights.light#5011>fragmentShader#2001:700=lightDiffuse[value:lights.index]]
+	[connect:source.lights.light#5012>fragmentShader#2001:700=lightSpecular[value:lights.index]]
+	[endif:]
+	[source:lights.light]
+	[endeach:]
+[endif:]
+
+<!-- Texture -->
+[if:texture.type!none]
+[connect:source.texture#50001>fragmentShader#2000:10113=textureSampler:10109=0]
+[source:texture]
+[endif:]
+
+<!-- Normal Map -->
+[if:normal.type!none]
+[connect:source.normal#50001>fragmentShader#2000:10113=detailSampler:10109=1]
+[source:normal]
+[endif:]
+
+<!-- Height Map -->
+[if:height.type!none]
+[connect:source.height#50001>fragmentShader#2000:10113=depthSampler:10109=2]
+[source:height]
+[endif:]
+
+<!-- Vertex Shader -->
+[connect:vertexShader#50001>rasterization#50000]
+<Block type="200" id="[id:vertexShader]">
+	<Properties>
+		<Property id="500">	
+			<GLSLDocument>
+<![CDATA[
+[include:vertex.glt]
+]]>
+			</GLSLDocument>
+		</Property>
+	</Properties>
+	<Ports>
+		[ports:vertexShader]
+	</Ports>
+</Block>
+
+<!-- Rasterization -->
+[connect:rasterization#50001>fragmentShader#50000]
+<Block type="2000" id="[id:rasterization]">
+	<Ports>
+		[ports:rasterization]
+	</Ports>
+</Block>
+
+<!-- Fragment Shader-->
+[connect:fragmentShader#50001>fragmentTests#50000]
+<Block type="204" id="[id:fragmentShader]">
+	<Properties>
+		<Property id="500">
+			<GLSLDocument>
+<![CDATA[
+[include:fragment.glt]
+]]>
+			</GLSLDocument>
+		</Property>
+	</Properties>
+	<Ports>
+		[ports:fragmentShader]
+	</Ports>
+</Block>
+
+<!-- Fragment Tests -->
+<Block type="2001" id="[id:fragmentTests]">
+	<Ports>
+		[ports:fragmentTests]
+	</Ports>
+</Block>
+
+<!-- Output -->
+[output:fragmentTests>output]
+
+<!-- Draw -->
+<RenderCommand type="101" id="[id:]" block="[id:vertexPuller]">
+	<Properties>
+		<Property id="14000">1</Property>
+	</Properties>
+</RenderCommand>

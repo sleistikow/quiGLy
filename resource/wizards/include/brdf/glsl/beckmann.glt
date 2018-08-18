@@ -1,0 +1,12 @@
+//Calculate microfacet distribution using beckmann.
+float beckmannDistribution(float roughness, float cosine)
+{
+	//Calculate parameters.
+	float squareCosine = cosine * cosine;
+	float squareTangent = 1.0 / squareCosine - 1.0;
+	float squareRoughness = roughness * roughness;
+	
+	//Calculate distribution.
+	float factor = 1 / (M_PI * squareRoughness * squareCosine * squareCosine);
+	return factor * exp(-squareTangent / squareRoughness);
+}

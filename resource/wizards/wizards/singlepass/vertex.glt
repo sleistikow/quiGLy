@@ -1,0 +1,42 @@
+[if:dataNormals=true]
+out vec3 vNormals;
+[endif:]
+[if:dataTangents=true]
+out vec3 vTangents;
+[endif:]
+[if:dataBitangents=true]
+out vec3 vBitangents;
+[endif:]
+[if:dataColors=true]
+out vec4 vColors;
+[endif:]
+[if:dataTexture=true]
+out vec3 vTexture;
+[endif:]	
+
+void main()
+{
+	//Forward the vertex data.
+[if:dataNormals=true]
+	vNormals = inNormals;
+[endif:]
+[if:dataTangents=true]
+	vTangents = inTangents;
+[endif:]
+[if:dataBitangents=true]
+	vBitangents = inBitangents;
+[endif:]
+[if:dataColors=true]
+	vColors = inColors;
+[endif:]
+[if:dataTexture=true]
+	vTexture = inTexture;
+[endif:]	
+
+	//Calculate the vertex position.
+[if:useMVP=true]
+	gl_Position = mvp * vec4(inPositions, 1.0);
+[else:]
+	gl_Position = vec4(inPositions, 1.0);
+[endif:]
+}

@@ -1,0 +1,41 @@
+//Calculated surface directions.
+vec3 anisotropyX;
+vec3 anisotropyY;
+
+//Calculate the anisotropical directions.
+void calculateAnisotropy()
+{
+    //Calculate deltas.
+	vec3 dp1 = dFdx(vPositions);
+	vec3 dp2 = dFdy(vPositions);
+	vec2 dt1 = dFdx(vTexture);
+	vec2 dt2 = dFdy(vTexture);
+ 
+    //Calculate tangent and bitangent.
+	vec3 alpha = cross(dp2, normal);
+	vec3 beta = cross(normal, dp1);
+	anisotropyX = normalize(alpha * dt1.x + beta * dt2.x);
+	anisotropyY = normalize(alpha * dt1.y + beta * dt2.y);
+}
+
+//Calculate specular using Cook-Torrance.
+float specularWard(float shininessX, float shininessY)
+{
+	//Calculate the surface directions.
+	calculateAnisotropy();
+
+	//Calculate additional angles.
+	float XdotH = dot(anisotropyX, halfAngle);
+	float YdotH = dot(anisotropyY, halfAngle);	
+	
+	//Calculate parameters.
+	float squareX = (XdotH / shininessX) * (XdotH / shininessX);
+	float squareY = (YdotH / shininessY) * (YdotH / shininessY);
+	float coefficent = sqrt(NdotL / NdotV) / (4.0 * M_PI * shininessX * shininessY); 
+	float theta = (squareX + squareY) / (1.0 + NdotH);
+
+	//Calculate BRDF.
+	return coefficent * exp(-2.0 * theta);
+}
+
+float calculateSpecular() { return specularWard([value:this.shininessX], [value:this.shininessY]); }

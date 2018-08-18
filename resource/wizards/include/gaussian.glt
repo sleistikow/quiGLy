@@ -1,0 +1,13 @@
+//Calculate the two-dimensional gaussian value.
+float calculateGaussian(float x, float y, float sigma)
+{
+	float alpha = 2 * sigma * sigma;
+	return 1 / (M_PI * alpha) * exp(-((x * x) + (y * y)) / alpha);
+}
+
+//Calculate the one-dimensioal gaussian value.
+float calculateGaussian(float x, float sigma)
+{
+	float alpha = 2 * sigma * sigma;
+	return 1 / sqrt(M_PI * alpha) * exp(-(x * x) / alpha);
+}

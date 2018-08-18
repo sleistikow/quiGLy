@@ -1,0 +1,11 @@
+//Approximate Fresnel using Schlick.
+float schlickFresnel(float f0, float f90, float angle)
+{
+	return f0 + (f90 - f0) * pow(1 - angle, 5);
+}
+
+//Approximate RGB Fresnel using Schlick.
+vec3 schlickFresnel(vec3 f0, float f90, float c)
+{
+	return f0 + (f90 - f0) * pow(1 - c, 5);
+}

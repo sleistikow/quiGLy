@@ -1,0 +1,54 @@
+//Retrieve the depth map's value.
+float getDepth(vec2 texCoords)
+{
+[if:this.invert=true]
+	return 1.0 - texture(depthSampler, texCoords)[0];
+[else:]
+	return texture(depthSampler, texCoords)[0];
+[endif:]
+}
+
+//Calculate parallax texture coordinates.
+vec2 calculateParallax()
+{
+	//Retrieve the effect's multiplier.
+	const float multiplier = [value:this.multiplier];
+	
+[if:this.algorithm.type=parallax]
+	//Calculate the texture offset.
+	vec2 offset = toEye.xy / toEye.z * (getDepth(vTexture) * multiplier);
+	return vTexture - offset;
+[else:]
+	//Calculate the current layer count.
+	const float minLayers = [value:this.algorithm.steep.minLayers];
+	const float maxLayers = [value:this.algorithm.steep.maxLayers];
+	float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), toEye)));  
+	
+	//Calculate the texture offset per layer.
+	vec2 offset = toEye.xy * multiplier / numLayers; 
+	
+	//Iterate over the layers until the layer depth matches the map.
+	vec2 texCoords = vTexture;
+	float layerDepth = 0.0;
+	float layerStep = 1.0 / numLayers;
+	while(layerDepth < getDepth(texCoords))
+	{
+		//Move on the the next layer.
+		layerDepth += layerStep;
+		texCoords -= offset;
+	}
+	
+	[if:this.algorithm.steep.interpolate=false]
+	//Return the calculate coordinates.
+	return texCoords;
+	[else:]
+	//Calculate the current and the previous depth.
+	float currentDepth = getDepth(texCoords) - layerDepth;
+	float previousDepth = getDepth(texCoords + offset) - (layerDepth - layerStep);
+ 
+	//Interpolate the texture coordinates according to the depths.
+	float delta = previousDepth - currentDepth;
+	return mix(texCoords + offset, texCoords, previousDepth / delta);
+	[endif:]
+[endif:]	
+}

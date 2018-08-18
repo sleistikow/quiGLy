@@ -1,0 +1,20 @@
+[include:brdf/glsl/schlick.glt!shader]
+
+//Calculate diffuse using Minnaert.
+float diffuseDisney(float roughness)
+{	
+	//Calculate and normalize diffuse.
+	float energyBias = mix(0, 0.5, roughness);
+	float energyFactor = mix(1.0, 1.0 / 1.51, roughness);
+	
+	//Calculate view and light fresnel.
+	float fresnel = energyBias + 2.0 * LdotH * LdotH * roughness;
+	float lightScatter = schlickFresnel(1.0, fresnel, NdotL);
+	float viewScatter = schlickFresnel(1.0, fresnel, NdotV);
+
+	//Calculate diffuse.
+	return lightScatter * viewScatter * energyFactor;
+}
+
+//Convencience diffuse method.
+float calculateDiffuse() { return diffuseDisney([value:this.roughness]); }

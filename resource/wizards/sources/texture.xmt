@@ -1,0 +1,24 @@
+<!-- Image Loader -->
+[connect:this.image#109>this#100]
+<Block type="1002" id="[id:this.image]">
+	<Properties>
+		<Property id="10100">[value:this.file]</Property>
+	</Properties>
+	<Ports>
+		[ports:this.image]
+	</Ports>
+</Block>
+
+<!-- Texture -->
+<Block type="107" id="[id:this]">
+	<Ports>
+		[ports:this]
+	</Ports>
+	<Properties>
+[if:this.gammaCorrection=auto]
+		<Property id="10135">37</Property>
+[else:]
+		<Property id="10135">30</Property>
+[endif:]
+	</Properties>
+</Block>

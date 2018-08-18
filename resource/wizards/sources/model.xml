@@ -1,0 +1,55 @@
+<source primary="type" disable="none">
+	<caption>Model: [:type] [:file]</caption>
+		
+	<!-- Data Source -->
+	<input type="select" default="3" name="type">	
+		<caption>Model</caption>
+		<option value="none">None</option>
+		<option value="0">Triangle</option>
+		<option value="1">Rectangle</option>
+		<option value="2">Circle</option>
+		<option value="3">Cuboid</option>
+		<option value="4">Sphere</option>
+		<option value="model">File</option>
+	</input>
+	
+	<!-- Source File -->
+	<input type="file" name="file" mandatory="true">
+		<dependency source="type" value="model" />
+		<caption>Source File</caption>
+		<format extension="fbx">Autodesk</format>
+		<format extension="dae">Collada</format>
+		<format extension="gltf|glb">glTF</format>
+		<format extension="blend">Blender 3D</format>
+		<format extension="3ds">3ds Max 3DS</format>
+		<format extension="ase">3ds Max ASE</format>
+		<format extension="obj">Wavefront Object</format>
+		<format extension="ifc">Industry Foundation Classes (IFC/Step)</format>
+		<format extension="xgl|zgl">XGL</format>
+		<format extension="ply">Stanford Polygon Library</format>
+		<format extension="lwo">LightWave</format>
+		<format extension="lws">LightWave Scene</format>
+		<format extension="lxo">Modo</format>
+		<format extension="stl">Stereolithography</format>
+		<format extension="x">DirectX X</format>
+		<format extension="ac">AC3D</format>
+		<format extension="ms3d">Milkshape 3D</format>
+		<format extension="xml">Ogre XML</format>
+		<format extension="irrmesh">Irrlicht Mesh</format>
+		<format extension="mdl">Quake I</format>
+		<format extension="md2">Quake II</format>
+		<format extension="md3">Quake III Mesh</format>
+		<format extension="pk3">Quake III Map/BSP</format>
+		<format extension="b3d">BlitzBasic 3D</format>
+		<format extension="q3d|q3s">Quick 3D</format>
+		<format extension="nff">Neutral File Format</format>
+		<format extension="nff">Sense8 WorldToolKit</format>
+		<format extension="off">Object File Format</format>
+		<format extension="raw">PovRAY Raw</format>
+		<format extension="ter">Terragen Terrain</format>
+		<format extension="mdl">3D GameStudio (3DGS)</format>
+		<format extension="hmp">3D GameStudio (3DGS) Terrain</format>
+		<format extension="ndo">Izware Nendo</format>
+	</input>
+		
+</source>

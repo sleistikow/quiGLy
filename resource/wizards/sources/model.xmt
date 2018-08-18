@@ -1,0 +1,19 @@
+[if:this.type=model]
+<!-- Model Loader -->
+<Block type="1001" id="[id:this]">
+[else:]
+<!-- Primitive Generator -->
+<Block type="1000" id="[id:this]">
+[endif:]		
+	<Properties>
+[if:this.type=model]
+		<Property id="10200">[value:this.file]</Property>
+		<Property id="10203">1</Property>
+[else:]
+		<Property id="10000">[value:this.type]</Property>
+[endif:]
+	</Properties>	
+	<Ports>
+		[ports:this]
+	</Ports>		
+</Block>

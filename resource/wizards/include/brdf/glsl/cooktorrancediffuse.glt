@@ -1,0 +1,27 @@
+[include:brdf/glsl/beckmann.glt!shader]
+
+[include:brdf/glsl/cooktorrance.glt!shader]
+
+//Calculate diffuse using Cook-Torrance.
+vec4 diffuseCookTorrance(float roughness, vec3 fresnel0, float refraction)
+{
+	//Calculate diffuse angles.
+	vec3 diffuseHalf = normalize(toLight + normal);
+	float diffuseNdotH = dot(normal, diffuseHalf);
+	
+	//Calculate attenuation.
+	float geometry = min(1.0, 2.0 * NdotL);
+
+	//Calculate distribution.
+	float distribution = beckmannDistribution(roughness, diffuseNdotH);
+	
+	//Calculate fresnel.
+	vec3 fresnel = cookTorranceFresnelRGB(fresnel0, refraction, 1.0);
+	
+	//Calculate BRDF.
+	vec3 GDF = geometry * distribution * fresnel;
+	return vec4(GDF / max(M_PI * NdotL, M_ZERO), 1.0);
+}
+
+//Convencience diffuse method.
+vec4 calculateDiffuse() { return diffuseCookTorrance([value:this.roughness], vec3([value:this.fresnel]), [value:this.refraction]); }

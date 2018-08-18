@@ -1,0 +1,33 @@
+#define M_PI 3.141592
+
+in vec2 vTexture;
+
+out vec4 glColor;
+
+[include:gamma.glt]
+
+[if:effect.type=blur]
+[include:posteffect/glsl/blur.glt:effect.blur]
+[else:]
+//Calculate the post effect depending on the texture coordinates.
+vec4 calculatePostEffect(vec2 textureCoordinate)
+{
+	//No post effect applied, just return the texture value.
+	[if:texture.gammaCorrection=manual]
+	return gammaToLinear(texture(textureSampler, textureCoordinate), [value:texture.gammaValue]);
+	[else:]
+	return texture(textureSampler, textureCoordinate);
+	[endif:]
+}
+[endif:]
+
+void main()
+{
+	//Apply the effect.
+	glColor = calculatePostEffect(vTexture);
+[if:output.display.enabled=true&output.display.gammaCorrection=manual]
+
+	//Apply gamma correction.
+	glColor = linearToGamma(glColor, [value:output.display.gammaValue]);
+[endif:]
+}

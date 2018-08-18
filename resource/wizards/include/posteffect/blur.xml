@@ -1,0 +1,36 @@
+<item>
+	<caption>Blur</caption>
+	
+	<!-- Calculation -->
+	<input type="int" name="blur.tapSize" default="5">
+		<caption>Tap Size</caption>
+		<description>Number of pixels taken into account.</description>
+	</input>
+	<input type="select" name="blur.direction" default="both">
+		<caption>Direction</caption>
+		<description>Select the direction in which the blur is applied.</description>
+		<option value="both">Both (2D)</option>
+		<option value="x">Horizontal</option>
+		<option value="y">Vertical</option>
+	</input>
+	<spacer />
+	
+	<input type="bool" name="blur.gaussian" default="true">
+		<caption>Use gaussian blur</caption>
+		<description>Weights the pixels by gaussian function.</description>
+	</input>
+	<input type="float" name="blur.deviation" default="1.0">
+		<dependency source="blur.gaussian" value="true" />
+		<caption>Standard Deviation</caption>
+		<description>The standard deviation used by the gaussian function.</description>
+	</input>
+	<spacer />
+	
+	<!-- Texture -->
+	<input type="int" default="512" name="blur.textureWidth">
+		<caption>Texture Width</caption>
+	</input>
+	<input type="int" default="512" name="blur.textureHeight">
+		<caption>Texture Height</caption>
+	</input>
+</item>

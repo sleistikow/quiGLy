@@ -1,0 +1,42 @@
+#define M_PI 3.141592
+
+in vec2 vTexture;
+
+out vec4 glColor;
+
+[include:gamma.glt]
+
+void main()
+{
+	//Load the textures.
+[each:blending]
+	vec4 texColor[value:blending.index] = texture(sampler[value:blending.index], vTexture);
+[endeach:]
+
+	//Conver to linear space.
+[each:blending]
+	[if:blending.texture.gammaCorrection=manual]
+	texColor[value:blending.index] = gammaToLinear(texColor[value:blending.index], [value:blending.texture.gammaValue]);
+	[endif:]
+[endeach:]
+	
+	//Blend all textures together.
+[each:blending]
+	[if:blending.index=0]
+	glColor = texColor[value:blending.index];
+	[elseif:blending.operation=multiply]
+	glColor *= texColor[value:blending.index];
+	[elseif:blending.operation=inverse]
+	glColor *= 1.0 - texColor[value:blending.index];
+	[elseif:blending.operation=add]
+	glColor += texColor[value:blending.index];
+	[elseif:blending.operation=subtract]
+	glColor -= texColor[value:blending.index];
+	[endif:]
+[endeach:]
+[if:output.display.enabled=true&output.display.gammaCorrection=manual]
+
+	//Apply gamma correction.
+	glColor = linearToGamma(glColor, [value:output.display.gammaValue]);
+[endif:]
+}

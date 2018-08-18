@@ -1,0 +1,20 @@
+<item>
+	<caption>Phong</caption>
+	
+	<!-- Parameter -->
+	<input type="float" name="phong.shininess" default="16">
+		<caption>Shininess</caption>
+		<description>The specular exponent.</description>
+	</input>
+	
+	<!-- Calculation -->
+	<input type="bool" name="phong.half" default="true">
+		<caption>Use half vector</caption>
+		<description>If checked, the shader will use the half vector between light source and view instead of the light's reflection vector to calculate the specular part.</description>
+	</input>
+	<input type="bool" name="phong.energy" default="false">
+		<caption>Guarantee energy conservation</caption>
+		<description>If checked, the calculation will be normalized to respect energy conservation.</description>
+	</input>
+	
+</item>

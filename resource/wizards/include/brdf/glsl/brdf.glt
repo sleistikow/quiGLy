@@ -1,0 +1,70 @@
+//Directional vectors.
+vec3 toEye, toLight, halfAngle;
+
+//Calculated angles.
+float NdotL, NdotV, LdotH, NdotH, RdotV;
+
+//Calculate and clamp dot products.
+void calculateNdotL() { NdotL = clamp(dot(normal, toLight), M_ZERO, 1.0); }
+void calculateNdotV() { NdotV = clamp(dot(normal, toEye), M_ZERO, 1.0); }
+void calculateLdotH() { LdotH = clamp(dot(toLight, halfAngle), M_ZERO, 1.0); }
+void calculateNdotH() { NdotH = clamp(dot(normal, halfAngle), M_ZERO, 1.0); }
+
+//Calculate reflection dot product.
+void calculateRdotV()
+{
+	vec3 lightReflect = reflect(-toLight, normal);
+	RdotV = clamp(dot(lightReflect, toEye), M_ZERO, 1.0);
+}
+
+//Initialize the directional vectors.
+void calculateDirections(vec3 eyePosition, vec3 lightPosition)
+{
+	//Calculate directional vectors.
+	toEye = normalize(eyePosition - vPositions);
+	toLight = normalize(lightPosition - vPositions);
+	halfAngle = normalize(toEye + toLight);
+}
+
+//Calculate the angles.
+void calculateAngles() 
+{ 
+	calculateNdotL();
+	calculateNdotV();
+	calculateLdotH();
+	calculateNdotH();
+	calculateRdotV();
+}
+	
+[if:this.metal=false]
+	[if:this.diffuse.type=lambert]
+	[include:brdf/glsl/lambertdiffuse.glt:this.diffuse.lambert]
+	[elseif:this.diffuse.type=minnaert]
+	[include:brdf/glsl/minnaertdiffuse.glt:this.diffuse.minnaert]
+	[elseif:this.diffuse.type=orennayar]
+	[include:brdf/glsl/orennayardiffuse.glt:this.diffuse.orennayar]
+	[elseif:this.diffuse.type=disney]
+	[include:brdf/glsl/disneydiffuse.glt:this.diffuse.disney]
+	[endif:]
+[endif:]
+
+[if:this.specular.type=phong]
+[include:brdf/glsl/phongbrdf.glt:this.specular.phong]
+[elseif:this.specular.type=wardanisotropy]
+[include:brdf/glsl/wardanisotropybrdf.glt:this.specular.wardanisotropy]
+[elseif:this.specular.type=microfacet]
+[include:brdf/glsl/microfacetbrdf.glt:this.specular.microfacet]
+[endif:]
+
+//Calculate the complete lighting.
+vec4 calculateBRDF(vec4 specular, vec4 diffuse, vec4 ambient)
+{
+	//Calculate diffuse and specular.
+[if:this.metal=false]
+	ambient += diffuse * calculateDiffuse();
+[endif:]
+	ambient += specular * calculateSpecular();
+
+	//Return shaded color.
+	return ambient;
+}

@@ -1,0 +1,12 @@
+<!-- Light Source -->
+<Block type="10002" id="[id:this]">
+	<Properties>
+		<Property id="1200">[value:this.position];1</Property>
+		<Property id="1204">[value:this.ambient]</Property>
+		<Property id="1205">[value:this.diffuse]</Property>
+		<Property id="1206">[value:this.specular]</Property>
+	</Properties>
+	<Ports>
+		[ports:this]
+	</Ports>
+</Block>

@@ -1,0 +1,188 @@
+<!-- Model Data Source -->
+[connect:source.model#102>dataMixer#100=modelPositions]
+[if:dataNormals=true]
+[connect:source.model#103>dataMixer#100=modelNormals]
+[endif:]
+[if:dataTangents=true]
+[connect:source.model#104>dataMixer#100=modelTangents]
+[endif:]
+[if:dataBitangents=true]
+[connect:source.model#105>dataMixer#100=modelBitangents]
+[endif:]
+[if:dataColors=true]
+[connect:source.model#106>dataMixer#100=modelColors]
+[endif:]
+[if:dataTexture=true]
+[connect:source.model#107>dataMixer#100=modelTexture]
+[endif:]
+[connect:source.model#108>indexBuffer#100]
+[source:model]
+
+<!-- Model Mixer -->
+[connect:dataMixer#101>dataBuffer#100]
+<Block type="100" id="[id:dataMixer]">
+	<Properties>
+		<Property id="100" asStruct="0">
+			<MixerLayoutEntry connection="[id:modelPositions]" name="inPositions" />
+[if:dataNormals=true]
+			<MixerLayoutEntry connection="[id:modelNormals]" name="inNormals" />
+[endif:]
+[if:dataTangents=true]
+			<MixerLayoutEntry connection="[id:modelTangents]" name="inTangents" />
+[endif:]
+[if:dataBitangents=true]
+			<MixerLayoutEntry connection="[id:modelBitangents]" name="inBitangents" />
+[endif:]
+[if:dataColors=true]
+			<MixerLayoutEntry connection="[id:modelColors]" name="inColors" />
+[endif:]
+[if:dataTexture=true]
+			<MixerLayoutEntry connection="[id:modelTexture]" name="inTexture" />
+[endif:]
+		</Property>
+	</Properties>
+	<Ports>
+		[ports:dataMixer]
+	</Ports>
+</Block>
+
+<!-- Vertex Buffer -->
+[connect:dataBuffer#101>vertexArrayObject#100]
+<Block type="101" id="[id:dataBuffer]">
+	<Ports>
+		[ports:dataBuffer]
+	</Ports>
+</Block>
+
+<!-- VAO -->
+[connect:vertexArrayObject#50001>vertexPuller#50000]
+<Block type="103" id="[id:vertexArrayObject]">
+	<Properties>
+		<Property id="200" reset="[id:vertexArrayObject]" />
+	</Properties>
+	<Ports>
+		[ports:vertexArrayObject]
+	</Ports>
+</Block>
+
+<!-- Index Buffer -->
+[connect:indexBuffer#101>vertexPuller#1000]
+<Block type="101" id="[id:indexBuffer]">
+	<Ports>
+		[ports:indexBuffer]
+	</Ports>
+</Block>
+
+<!-- Vertex Puller -->
+[connect:vertexPuller#50001>vertexShader#50000]
+<Block type="102" id="[id:vertexPuller]">
+	<Ports>
+		[ports:vertexPuller]
+	</Ports>
+</Block>
+
+<!-- MVP Uniform -->
+[if:useMVP=true]
+[connect:mvp#5004>vertexShader#2001:700=mvp]
+<Block type="10000" id="[id:mvp]">
+	<Properties>
+		<Property id="1104">2;2;2</Property>
+	</Properties>
+	<Ports>
+		[ports:mvp]
+	</Ports>
+</Block>
+[endif:]
+
+<!-- Camera -->
+[if:enableCamera=true]
+[connect:camera#50001>mvp#50000]
+<Block type="10001" id="[id:camera]">
+	<Ports>
+		[ports:camera]
+	</Ports>
+</Block>
+[endif:]
+
+<!-- Vertex Shader -->
+[connect:vertexShader#50001>rasterization#50000]
+<Block type="200" id="[id:vertexShader]">
+	<Properties>
+		<Property id="500">
+[if:defaultVertexShader=true]		
+			<GLSLDocument>
+<![CDATA[
+[include:vertex.glt]
+]]>
+			</GLSLDocument>
+[else:]
+	[if:generateVertexInput=true]
+			<GLSLDocument generateInput="true">
+	[else:]
+			<GLSLDocument>
+	[endif:]
+<![CDATA[
+[value:codeVertexShader]
+]]>
+			</GLSLDocument>
+[endif:]
+		</Property>
+	</Properties>
+	<Ports>
+		[ports:vertexShader]
+	</Ports>
+</Block>
+
+<!-- Rasterization -->
+[connect:rasterization#50001>fragmentShader#50000]
+<Block type="2000" id="[id:rasterization]">
+	<Ports>
+		[ports:rasterization]
+	</Ports>
+</Block>
+
+<!-- Fragment Shader-->
+[connect:fragmentShader#50001>fragmentTests#50000]
+<Block type="204" id="[id:fragmentShader]">
+	<Properties>
+		<Property id="500">
+[if:defaultFragmentShader=true]
+			<GLSLDocument>
+<![CDATA[
+[include:fragment.glt]
+]]>
+			</GLSLDocument>
+[else:]
+	[if:generateFragmentInput=true]
+			<GLSLDocument generateInput="true">
+	[else:]
+			<GLSLDocument>
+	[endif:]
+<![CDATA[
+[value:codeFragmentShader]
+]]>
+			</GLSLDocument>
+[endif:]
+		</Property>
+	</Properties>
+	<Ports>
+		[ports:fragmentShader]
+	</Ports>
+</Block>
+
+<!-- Fragment Tests -->
+<Block type="2001" id="[id:fragmentTests]">
+	<Ports>
+		[ports:fragmentTests]
+	</Ports>
+</Block>
+
+<!-- Output -->
+[output:fragmentTests>output]
+	
+<!-- Draw -->
+<RenderCommand type="101" id="[id:]" block="[id:vertexPuller]">
+	<Properties>
+		<Property id="14000">1</Property>
+	</Properties>
+</RenderCommand>

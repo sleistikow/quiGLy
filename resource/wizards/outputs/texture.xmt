@@ -1,0 +1,43 @@
+<!-- Frame Buffer Object -->
+[connect:this.in#50001>this.frameBufferObject#50000]
+[connect:this.frameBufferObject#4000>this.renderBuffer#100:900=1]
+[connect:this.frameBufferObject#4001>this#100]
+<Block type="109" id="[id:this.frameBufferObject]">
+	<Properties/>
+	<Ports>
+		[ports:this.frameBufferObject]
+	</Ports>
+</Block>
+
+<!-- Render Buffer -->
+<Block type="110" id="[id:this.renderBuffer]">
+	<Properties>
+		<Property id="1001">9</Property>
+		<Property id="1002">[value:this.textureWidth]</Property>
+		<Property id="1003">[value:this.textureHeight]</Property>
+	</Properties>
+	<Ports>
+		[ports:this.renderBuffer]
+	</Ports>
+</Block>
+
+<!-- Texture -->
+<Block type="107" id="[id:this]">
+	<Properties>
+		<Property id="10121">[value:this.textureWidth]</Property>
+		<Property id="10122">[value:this.textureHeight]</Property>
+		<Property id="10135">30</Property>
+	</Properties>
+	<Ports>
+		[ports:this]
+	</Ports>
+</Block>
+
+<!-- Clear -->
+<RenderCommand type="100" id="[id:]" block="[id:this.frameBufferObject]">
+	<Properties>
+		<Property id="13007">[value:this.textureWidth]</Property>
+		<Property id="13008">[value:this.textureHeight]</Property>
+		<Property id="13009">0</Property>
+	</Properties>
+</RenderCommand>

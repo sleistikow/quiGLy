@@ -1,0 +1,27 @@
+//Approximate Fresnel using Cook-Torrance.
+float cookTorranceFresnel(float n, float c)
+{
+	//Calculate parameter.
+	float g = sqrt((n * n) + (c * c) - 1);
+	
+	//Partially evaluate equotation.
+	float alpha = ((g - c) * (g - c)) / ((g + c) * (g + c));
+	float beta = (c * (g + c) - 1) * (c * (g + c) - 1);
+	float gamma = (c * (g - c) + 1) * (c * (g - c) + 1);
+	
+	//Calculate unshifted fresnel.
+	return alpha * (1 + beta / gamma);
+}
+
+//Approximate RGB Fresnel using Cook-Torrance.
+vec3 cookTorranceFresnelRGB(vec3 f0, float n, float c)
+{
+	//Calculate unshifted fresnel.
+	float ftheta = cookTorranceFresnel(n, c);
+	
+	//Calculate unshifted fresnel for normal angle.
+	float fnormal = ((n - 1) * (n - 1)) / ((n + 1) * (n + 1));
+	
+	//Return shifted colors.
+	return f0 + (1.0 - f0) * max(0.0, ftheta - fnormal) / (1.0 - fnormal);
+}

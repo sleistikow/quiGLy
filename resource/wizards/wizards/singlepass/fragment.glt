@@ -1,0 +1,26 @@
+[if:dataNormals=true]
+in vec3 vNormals;
+[endif:]
+[if:dataTangents=true]
+in vec3 vTangents;
+[endif:]
+[if:dataBitangents=true]
+in vec3 vBitangents;
+[endif:]
+[if:dataColors=true]
+in vec4 vColors;
+[endif:]
+[if:dataTexture=true]
+in vec3 vTexture;
+[endif:]
+
+out vec4 glColor;
+
+void main()
+{
+[if:dataColors=true]
+	glColor = vColors;
+[else:]
+	glColor = vec4(0);
+[endif:]
+}

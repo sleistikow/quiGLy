@@ -1,0 +1,22 @@
+//Calculate specular using Phong.
+float specularPhong(float shininess)
+{		
+[if:this.half=false]
+	[if:this.energy=false]
+	return pow(RdotV, shininess);
+	[else:]
+	float normalization = (shininess + 2) / (2 * M_PI);
+	return normalization * pow(RdotV, shininess);
+	[endif:]
+[else:]
+	[if:this.energy=false]
+	return pow(NdotH, shininess);
+	[else:]
+	float normalization = (shininess + 8) / (8 * M_PI);
+	return normalization * pow(NdotH, shininess);
+	[endif:]
+[endif:]
+}
+
+//Convencience specular method.
+float calculateSpecular() { return specularPhong([value:this.shininess]); }

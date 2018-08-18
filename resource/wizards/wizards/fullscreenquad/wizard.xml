@@ -1,0 +1,40 @@
+﻿<projectWizard>
+	<name>Fullscreen Quad</name>
+	<description>Builds a new project that renders a fullscreen quad. This can be used to create post-processing shaders.</description>
+	<pages>
+	
+		<!-- Project -->
+		<page type="file">
+			<title>Project</title>
+			<subtitle>Adjust the basic project settings.</subtitle>
+			<allowImport value="true" />
+			<minimumVersion value="330" />
+		</page>
+		
+		<!-- Data Source -->
+		<page type="source" source="texture" name="texture">
+			<title>Texture</title>
+			<subtitle>Specify the texture that is rendered to the quad.</subtitle>
+		</page>
+		
+		<!-- Post Effect -->
+		<page type="stack" name="effect">
+			<title>Post Effect</title>
+			<subtitle>Configure the post effect that is applied.</subtitle>
+			<item type="none">
+				<caption>No Post Effect</caption>
+			</item>
+			<item type="blur" include="posteffect/blur.xml" />
+		</page>
+			
+			
+		<!-- Output -->
+		<page type="output" name="output">
+			<title>Output</title>
+			<subtitle>Configure the outputs of the render pass.</subtitle>
+			<output output="display" default="true" />
+			<output output="texture" />
+		</page>
+		
+	</pages>
+</projectWizard>

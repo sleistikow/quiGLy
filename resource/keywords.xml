@@ -1,0 +1,457 @@
+<dictionary>
+
+	<type name="builtin">
+		<keyword shader="geometry|vertex|tcontrol|tevaluation">gl_Position</keyword>
+		<keyword shader="geometry|vertex|tcontrol|tevaluation">gl_PointSize</keyword>
+		<keyword shader="geometry|vertex|tcontrol|tevaluation|fragment">gl_ClipDistance</keyword>
+		<keyword shader="geometry|vertex|tcontrol|tevaluation|fragment">gl_CullDistance</keyword>
+		<keyword shader="vertex">gl_VertexID</keyword>
+		<keyword shader="vertex">gl_InstanceID</keyword>
+		<keyword shader="tcontrol|tevaluation">gl_PatchVerticesIn</keyword>
+		<keyword shader="geometry|tcontrol|tevaluation">gl_PrimitiveID</keyword>
+		<keyword shader="geometry|tcontrol">gl_InvocationID</keyword>
+		<keyword shader="tevaluation">gl_TessCoord</keyword>
+		<keyword shader="geometry|fragment">gl_Layer</keyword>
+		<keyword shader="geometry|fragment">gl_ViewportIndex</keyword>
+		<keyword shader="fragment">gl_FragCoord</keyword>
+		<keyword shader="fragment">gl_FrontFacing</keyword>
+		<keyword shader="fragment">gl_PointCoord</keyword>
+		<keyword shader="geometry|fragment">gl_PrimitiveID</keyword>
+		<keyword shader="fragment">gl_SampleID</keyword>
+		<keyword shader="fragment">gl_SamplePosition</keyword>
+		<keyword shader="geometry">gl_Layer</keyword>
+		<keyword shader="fragment">gl_HelperInvocation</keyword>
+		<keyword shader="fragment">gl_FragDepth</keyword>
+		<keyword shader="tcontrol|tevaluation">gl_TessLevelOuter</keyword>
+		<keyword shader="tcontrol|tevaluation">gl_TessLevelInner</keyword>
+		<keyword shader="fragment">gl_SampleMask</keyword>
+		<keyword shader="fragment">gl_SampleMaskIn</keyword>
+		<keyword from="400" shader="tcontrol|tevaluation">gl_MaxPatchVertices</keyword>
+	</type>
+
+	<type name="constant">
+		<keyword from="430">gl_MaxComputeWorkGroupCount</keyword>
+		<keyword>gl_NumWorkGroups</keyword>
+		<keyword>gl_WorkGroupSize</keyword>
+		<keyword>gl_LocalGroupSize</keyword>
+		<keyword>gl_WorkGroupID</keyword>
+		<keyword>gl_LocalInvocationID</keyword>
+		<keyword>gl_GlobalInvocationID</keyword>
+		<keyword>gl_LocalInvocationIndex</keyword>
+		<keyword from="430">gl_MaxComputeWorkGroupSize</keyword>
+		<keyword from="430">gl_MaxComputeUniformComponents</keyword>
+		<keyword from="430">gl_MaxComputeTextureImageUnits</keyword>
+		<keyword from="430">gl_MaxComputeImageUniforms</keyword>
+		<keyword from="430">gl_MaxComputeAtomicCounters</keyword>
+		<keyword from="430">gl_MaxComputeAtomicCounterBuffers</keyword>
+		<keyword>gl_MaxVertexAttribs</keyword>
+		<keyword>gl_MaxVertexUniformComponents</keyword>
+		<keyword>gl_MaxVaryingComponents</keyword>
+		<keyword to="330">gl_MaxVaryingFloats</keyword>
+		<keyword from="150">gl_MaxVertexOutputComponents</keyword>
+		<keyword from="150">gl_MaxGeometryInputComponents</keyword>
+		<keyword from="150">gl_MaxGeometryOutputComponents</keyword>
+		<keyword from="150">gl_MaxFragmentInputComponents</keyword>
+		<keyword>gl_MaxVertexTextureImageUnits</keyword>
+		<keyword>gl_MaxCombinedTextureImageUnits</keyword>
+		<keyword>gl_MaxTextureImageUnits</keyword>
+		<keyword to="330">gl_MaxTextureUnits</keyword>
+		<keyword to="330">gl_MaxTextureCoords</keyword>
+		<keyword from="420">gl_MaxImageUnits</keyword>
+		<keyword from="420">gl_MaxCombinedImageUnitsAndFragmentOutputs</keyword>
+		<keyword from="420">gl_MaxImageSamples</keyword>
+		<keyword from="420">gl_MaxVertexImageUniforms</keyword>
+		<keyword from="420">gl_MaxTessControlImageUniforms</keyword>
+		<keyword from="420">gl_MaxTessEvaluationImageUniforms</keyword>
+		<keyword from="420">gl_MaxGeometryImageUniforms</keyword>
+		<keyword from="420">gl_MaxFragmentImageUniforms</keyword>
+		<keyword from="420">gl_MaxCombinedImageUniforms</keyword>
+		<keyword from="430">gl_MaxFragmentUniformComponents</keyword>
+		<keyword from="430">gl_MaxDrawBuffers</keyword>
+		<keyword from="430">gl_MaxClipDistances</keyword>
+		<keyword to="120">gl_MaxClipPlanes</keyword>
+		<keyword from="430">gl_MaxGeometryTextureImageUnits</keyword>
+		<keyword from="150">gl_gl_MaxGeometryOutputVertices</keyword>
+		<keyword from="150">gl_MaxGeometryTotalOutputComponents</keyword>
+		<keyword from="150">gl_MaxGeometryUniformComponents</keyword>
+		<keyword from="150">gl_MaxGeometryVaryingComponents</keyword>
+		<keyword from="400">gl_MaxTessControlInputComponents</keyword>
+		<keyword from="400">gl_MaxTessControlOutputComponents</keyword>
+		<keyword from="400">gl_MaxTessControlTextureImageUnits</keyword>
+		<keyword from="400">gl_MaxTessControlUniformComponents</keyword>
+		<keyword from="400">gl_MaxTessControlTotalOutputComponents</keyword>
+		<keyword from="400">gl_MaxTessEvaluationInputComponents</keyword>
+		<keyword from="400">gl_MaxTessEvaluationOutputComponents</keyword>
+		<keyword from="400">gl_MaxTessEvaluationTextureImageUnits</keyword>
+		<keyword from="400">gl_MaxTessEvaluationUniformComponents</keyword>
+		<keyword from="400">gl_MaxTessPatchComponents</keyword>
+		<keyword from="400">gl_MaxTessGenLevel</keyword>
+		<keyword from="410">gl_MaxViewports</keyword>
+		<keyword from="410">gl_MaxVertexUniformVectors</keyword>
+		<keyword from="410">gl_MaxFragmentUniformVectors</keyword>
+		<keyword from="410">gl_MaxVaryingVectors</keyword>
+		<keyword from="420">gl_MaxVertexAtomicCounters</keyword>
+		<keyword from="420">gl_MaxTessControlAtomicCounters</keyword>
+		<keyword from="420">gl_MaxTessEvaluationAtomicCounters</keyword>
+		<keyword from="420">gl_MaxGeometryAtomicCounters</keyword>
+		<keyword from="420">gl_MaxFragmentAtomicCounters</keyword>
+		<keyword from="420">gl_MaxCombinedAtomicCounters</keyword>
+		<keyword from="420">gl_MaxAtomicCounterBindings</keyword>
+		<keyword from="420">gl_MaxVertexAtomicCounterBuffers</keyword>
+		<keyword from="420">gl_MaxTessControlAtomicCounterBuffers</keyword>
+		<keyword from="420">gl_MaxTessEvaluationAtomicCounterBuffers</keyword>
+		<keyword from="420">gl_MaxGeometryAtomicCounterBuffers</keyword>
+		<keyword from="420">gl_MaxFragmentAtomicCounterBuffers</keyword>
+		<keyword from="420">gl_MaxCombinedAtomicCounterBuffers</keyword>
+		<keyword from="420">gl_MaxAtomicCounterBufferSize</keyword>
+		<keyword from="420">gl_MinProgramTexelOffset</keyword>
+		<keyword from="420">gl_MaxProgramTexelOffset</keyword>
+		<keyword>gl_MaxTransformFeedbackBuffers</keyword>
+		<keyword>gl_MaxTransformFeedbackInterleavedComponents</keyword>
+		<keyword>gl_MaxCullDistances</keyword>
+		<keyword>gl_MaxCombinedClipAndCullDistances</keyword>
+		<keyword>gl_MaxSamples</keyword>
+		<keyword>gl_MaxVertexImageUniforms</keyword>
+		<keyword>gl_MaxFragmentImageUniforms</keyword>
+		<keyword>gl_MaxComputeImageUniforms</keyword>
+		<keyword>gl_MaxCombinedImageUniforms</keyword>
+		<keyword>gl_MaxCombinedShaderOutputResources</keyword>
+	</type>
+
+	<type name="datatype">
+		<keyword>int</keyword>
+		<keyword>float</keyword>
+		<keyword>bool</keyword>
+		<keyword from="400">double</keyword>
+		<keyword>void</keyword>
+		<keyword>int</keyword>
+		<keyword>uint</keyword>
+		<keyword>mat2</keyword>
+		<keyword>mat2x2</keyword>
+		<keyword>mat2x3</keyword>
+		<keyword>mat2x4</keyword>
+		<keyword>mat3</keyword>
+		<keyword>mat3x2</keyword>
+		<keyword>mat3x3</keyword>
+		<keyword>mat3x4</keyword>
+		<keyword>mat4</keyword>
+		<keyword>mat4x2</keyword>
+		<keyword>mat4x3</keyword>
+		<keyword>mat4x4</keyword>
+		<keyword from="400">dmat2</keyword>
+		<keyword from="400">dmat2x2</keyword>
+		<keyword from="400">dmat2x3</keyword>
+		<keyword from="400">dmat2x4</keyword>
+		<keyword from="400">dmat3</keyword>
+		<keyword from="400">dmat3x2</keyword>
+		<keyword from="400">dmat3x3</keyword>
+		<keyword from="400">dmat3x4</keyword>
+		<keyword from="400">dmat4</keyword>
+		<keyword from="400">dmat4x2</keyword>
+		<keyword from="400">dmat4x3</keyword>
+		<keyword from="400">dmat4x4</keyword>
+		<keyword>vec2</keyword>
+		<keyword>vec3</keyword>
+		<keyword>vec4</keyword>
+		<keyword>bvec2</keyword>
+		<keyword>bvec3</keyword>
+		<keyword>bvec4</keyword>
+		<keyword>ivec2</keyword>
+		<keyword>ivec3</keyword>
+		<keyword>ivec4</keyword>
+		<keyword>uvec2</keyword>
+		<keyword>uvec3</keyword>
+		<keyword>uvec4</keyword>
+		<keyword from="400">dvec2</keyword>
+		<keyword from="400">dvec3</keyword>
+		<keyword from="400">dvec4</keyword>
+		<keyword>samplerCube</keyword>
+		<keyword>isamplerCube</keyword>
+		<keyword>usamplerCube</keyword>
+		<keyword from="400">samplerCubeArray</keyword>
+		<keyword from="400">isamplerCubeArray</keyword>
+		<keyword from="400">usamplerCubeArray</keyword>
+		<keyword>sampler1DArray</keyword>
+		<keyword>isampler1DArray</keyword>
+		<keyword>usampler1DArray</keyword>
+		<keyword>sampler2DArray</keyword>
+		<keyword>isampler2DArray</keyword>
+		<keyword>usampler2DArray</keyword>
+		<keyword>sampler1D</keyword>
+		<keyword>isampler1D</keyword>
+		<keyword>usampler1D</keyword>
+		<keyword>sampler2D</keyword>
+		<keyword>isampler2D</keyword>
+		<keyword>usampler2D</keyword>
+		<keyword>sampler3D</keyword>
+		<keyword>isampler3D</keyword>
+		<keyword>usampler3D</keyword>
+		<keyword>sampler1DShadow</keyword>
+		<keyword>sampler2DShadow</keyword>
+		<keyword>samplerCubeShadow</keyword>
+		<keyword>sampler2DRect</keyword>
+		<keyword>usampler2DRect</keyword>
+		<keyword>isampler2DRect</keyword>
+		<keyword>sampler2DRectShadow</keyword>
+		<keyword>samplerBuffer</keyword>
+		<keyword>isamplerBuffer</keyword>
+		<keyword>usamplerBuffer</keyword>
+		<keyword>sampler2DMS</keyword>
+		<keyword>isampler2DMS</keyword>
+		<keyword>usampler2DMS</keyword>
+		<keyword>samplerArray</keyword>
+		<keyword>isamplerArray</keyword>
+		<keyword>usamplerArray</keyword>
+		<keyword from="400">samplerCubeArrayShadow</keyword>
+		<keyword from="420">image1D</keyword>
+		<keyword from="420">iimage1D</keyword>
+		<keyword from="420">uimage1D</keyword>
+		<keyword from="420">image2D</keyword>
+		<keyword from="420">iimage2D</keyword>
+		<keyword from="420">uimage2D</keyword>
+		<keyword from="420">image3D</keyword>
+		<keyword from="420">iimage3D</keyword>
+		<keyword from="420">uimage3D</keyword>
+		<keyword from="420">image2DRect</keyword>
+		<keyword from="420">iimage2DRect</keyword>
+		<keyword from="420">uimage2DRect</keyword>
+		<keyword from="420">image1DArray</keyword>
+		<keyword from="420">iimage1DArray</keyword>
+		<keyword from="420">uimage1DArray</keyword>
+		<keyword from="420">image2DArray</keyword>
+		<keyword from="420">iimage2DArray</keyword>
+		<keyword from="420">uimage2DArray</keyword>
+		<keyword from="420">imageCube</keyword>
+		<keyword from="420">iimageCube</keyword>
+		<keyword from="420">uimageCube</keyword>
+		<keyword from="420">imageBuffer</keyword>
+		<keyword from="420">iimageBuffer</keyword>
+		<keyword from="420">uimageBuffer</keyword>
+		<keyword from="420">imageCubeArray</keyword>
+		<keyword from="420">iimageCubeArray</keyword>
+		<keyword from="420">uimageCubeArray</keyword>
+		<keyword from="420">image2DMS</keyword>
+		<keyword from="420">iimage2DMS</keyword>
+		<keyword from="420">uimage2DMS</keyword>
+		<keyword from="420">image2DMSArray</keyword>
+		<keyword from="420">iimage2DMSArray</keyword>
+		<keyword from="420">uimage2DMSArray</keyword>
+	</type>
+
+	<type name="function">
+		<keyword>mix</keyword>
+		<keyword>lerp</keyword>
+		<keyword>radians</keyword>
+		<keyword>degrees</keyword>
+		<keyword>sin</keyword>
+		<keyword>cos</keyword>
+		<keyword>tan</keyword>
+		<keyword>asin</keyword>
+		<keyword>acos</keyword>
+		<keyword>atan</keyword>
+		<keyword>sinh</keyword>
+		<keyword>cosh</keyword>
+		<keyword>tanh</keyword>
+		<keyword>asinh</keyword>
+		<keyword>acosh</keyword>
+		<keyword>atanh</keyword>
+		<keyword>pow</keyword>
+		<keyword>exp</keyword>
+		<keyword>log</keyword>
+		<keyword>exp2</keyword>
+		<keyword>log2</keyword>
+		<keyword>sqrt</keyword>
+		<keyword>inversesqrt</keyword>
+		<keyword>abs</keyword>
+		<keyword>sign</keyword>
+		<keyword>floor</keyword>
+		<keyword>trunc</keyword>
+		<keyword>round</keyword>
+		<keyword>roundEven</keyword>
+		<keyword>ceil</keyword>
+		<keyword>fract</keyword>
+		<keyword>mod</keyword>
+		<keyword>min</keyword>
+		<keyword>max</keyword>
+		<keyword>clamp</keyword>
+		<keyword>step</keyword>
+		<keyword>smoothstep</keyword>
+		<keyword>isnan</keyword>
+		<keyword>isinf</keyword>
+		<keyword>floatBitsToInt</keyword>
+		<keyword>floatBitsToUInt</keyword>
+		<keyword>intBitsToFloat</keyword>
+		<keyword>uintBitsToFloat</keyword>
+		<keyword>fma</keyword>
+		<keyword>frexp</keyword>
+		<keyword>ldexp</keyword>
+		<keyword>packUnorm2x16</keyword>
+		<keyword>unpackUnorm2x16</keyword>
+		<keyword>packSnorm2x16</keyword>
+		<keyword>unpackSnorm2x16</keyword>
+		<keyword>packUnorm4x8</keyword>
+		<keyword>unpackUnorm4x8</keyword>
+		<keyword>packSnorm4x8</keyword>
+		<keyword>unpackSnorm4x8</keyword>
+		<keyword>packDouble2x32</keyword>
+		<keyword>unpackDouble2x32</keyword>
+		<keyword>packHalf2x16</keyword>
+		<keyword>unpackHalf2x16</keyword>
+		<keyword>length</keyword>
+		<keyword>distance</keyword>
+		<keyword>dot</keyword>
+		<keyword>cross</keyword>
+		<keyword>normalize</keyword>
+		<keyword>faceforward</keyword>
+		<keyword>reflect</keyword>
+		<keyword>refract</keyword>
+		<keyword>matrixCompMult</keyword>
+		<keyword>outerProduct</keyword>
+		<keyword>transpose</keyword>
+		<keyword>determinant</keyword>
+		<keyword>inverse</keyword>
+		<keyword>lessThan</keyword>
+		<keyword>lessThanEqual</keyword>
+		<keyword>greaterThan</keyword>
+		<keyword>greaterThanEqual</keyword>
+		<keyword>equal</keyword>
+		<keyword>notEqual</keyword>
+		<keyword>any</keyword>
+		<keyword>all</keyword>
+		<keyword>not</keyword>
+		<keyword>uaddCarry</keyword>
+		<keyword>usubBorrow</keyword>
+		<keyword>umulExtended</keyword>
+		<keyword>imulExtended</keyword>
+		<keyword>bitfieldExtract</keyword>
+		<keyword>bitfieldReverse</keyword>
+		<keyword>bitfieldInsert</keyword>
+		<keyword>bitCount</keyword>
+		<keyword>findLSB</keyword>
+		<keyword>findMSB</keyword>
+		<keyword>atomicCounterIncrement</keyword>
+		<keyword>atomicCounterDecrement</keyword>
+		<keyword>atomicCounter</keyword>
+		<keyword>atomicOP</keyword>
+		<keyword>imageSize</keyword>
+		<keyword>imageSamples</keyword>
+		<keyword>imageLoad</keyword>
+		<keyword>imageStore</keyword>
+		<keyword>imageAtomicAdd</keyword>
+		<keyword>imageAtomicMin</keyword>
+		<keyword>imageAtomicMax</keyword>
+		<keyword>imageAtomicAnd</keyword>
+		<keyword>imageAtomicOn</keyword>
+		<keyword>imageAtomicXon</keyword>
+		<keyword>imageAtomicExchange</keyword>
+		<keyword>imageAtomicCompSwap</keyword>
+		<keyword>dFdxFine</keyword>
+		<keyword>dFdxCoarse</keyword>
+		<keyword>fwidthFine</keyword>
+		<keyword>fwidthCoarse</keyword>
+		<keyword>interpolateAtCentroid</keyword>
+		<keyword>interpolateAtSample</keyword>
+		<keyword>interpolateAtOffset</keyword>
+		<keyword>noise1</keyword>
+		<keyword>noise2</keyword>
+		<keyword>noise3</keyword>
+		<keyword>noise4</keyword>
+		<keyword>EmitStreamVertex</keyword>
+		<keyword>EndStreamPrimitive</keyword>
+		<keyword>EmitVertex</keyword>
+		<keyword>EndPrimitive</keyword>
+		<keyword>barrier</keyword>
+		<keyword>memoryBarrier</keyword>
+		<keyword>groupMemoryBarrier</keyword>
+		<keyword>memoryBarrierAtomicCounter</keyword>
+		<keyword>memoryBarrierShared</keyword>
+		<keyword>memoryBarrierBuffer</keyword>
+		<keyword>memoryBarrierImage</keyword>
+		<keyword>textureSize</keyword>
+		<keyword>textureQueryLod</keyword>
+		<keyword>textureQueryLevels</keyword>
+		<keyword>textureSamples</keyword>
+		<keyword>texture</keyword>
+		<keyword>textureProj</keyword>
+		<keyword>textureLod</keyword>
+		<keyword>textureOffset</keyword>
+		<keyword>texelFetch</keyword>
+		<keyword>texelFetchOffset</keyword>
+		<keyword>textureProjOffset</keyword>
+		<keyword>textureLodOffset</keyword>
+		<keyword>textureProjLod</keyword>
+		<keyword>textureProjLodOffset</keyword>
+		<keyword>textureGrad</keyword>
+		<keyword>textureGradOffset</keyword>
+		<keyword>textureProjGrad</keyword>
+		<keyword>textureProjGradOffset</keyword>
+		<keyword>textureGatherOffset?</keyword>
+		<keyword>textureGather</keyword>
+	</type>
+
+	<type name="qualifier">
+		<keyword>in</keyword>
+		<keyword>inout</keyword>
+		<keyword>out</keyword>
+		<keyword>attribute</keyword>
+		<keyword>const</keyword>
+		<keyword>uniform</keyword>
+		<keyword>varying</keyword>
+		<keyword from="430">buffer</keyword>
+		<keyword from="430">shared</keyword>
+		<keyword from="420">coherent</keyword>
+		<keyword from="420">volatile</keyword>
+		<keyword from="420">restrict</keyword>
+		<keyword from="420">readonly</keyword>
+		<keyword from="420">writeonly</keyword>
+		<keyword from="420">atomic_uint</keyword>
+		<keyword>layout</keyword>
+		<keyword>centroid</keyword>
+		<keyword>flat</keyword>
+		<keyword>smooth</keyword>
+		<keyword>noperspective</keyword>
+		<keyword from="400">patch</keyword>
+		<keyword from="400">sample</keyword>
+		<keyword>invariant</keyword>
+		<keyword from="430">precise</keyword>
+		<keyword>lowp</keyword>
+		<keyword>mediump</keyword>
+		<keyword>highp</keyword>
+		<keyword>precision</keyword>
+	</type>
+
+	<type name="structural">
+		<keyword>struct</keyword>
+		<keyword>if</keyword>
+		<keyword from="400">subroutine</keyword>
+		<keyword>else</keyword>
+		<keyword>struct</keyword>
+		<keyword>for</keyword>
+		<keyword>while</keyword>
+		<keyword>do</keyword>
+		<keyword>layout</keyword>
+		<keyword>return</keyword>
+		<keyword>switch</keyword>
+		<keyword>case</keyword>
+		<keyword>break</keyword>
+		<keyword>continue</keyword>
+		<keyword>default</keyword>
+		<keyword>discard</keyword>
+	</type>
+
+	<type name="number">
+		<keyword>true</keyword>
+		<keyword>false</keyword>
+		<expression>\b[0-9]*\.?[0-9]+\b</expression>
+		<expression>\b0[xX][0-9A-Fa-f]+\b</expression>
+	</type>
+
+	<type name="preprocessor">
+		<expression>^#.*$</expression>
+	</type>
+
+	<type name="quiGLy">
+		<expression>^/\*\* #quiGLy .* \*\*/$</expression>
+	</type>
+
+</dictionary>

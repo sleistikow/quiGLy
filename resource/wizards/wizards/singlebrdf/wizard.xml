@@ -1,0 +1,184 @@
+<projectWizard type="singlePass">
+	<name>Single BRDF</name>
+	<description>Builds a new project that shades an object using a single BRDF.</description>
+	<pages>
+	
+		<!-- Project -->
+		<page type="file">
+			<title>Project</title>
+			<subtitle>Adjust the basic project settings.</subtitle>
+			<allowImport value="true" />
+			<minimumVersion value="330" />
+			<input type="select" default="single" name="scene">
+				<caption>Scene Lighting</caption>
+				<option value="single">Single Light Source</option>
+				<option value="multi">Multiple Light Sources</option>
+			</input>
+		</page>
+		
+		<!-- Data Source -->
+		<page type="source" source="model" name="model">
+			<title>Model</title>
+			<subtitle>Load a mesh from a supported file or generates a primitive.</subtitle>
+		</page>
+			
+		<!-- Texture -->
+		<page type="custom">
+			<title>Texture</title>
+			<subtitle>Specify the texture that is applied to the model.</subtitle>
+			<input type="source" source="texture" name="texture" />
+		</page>
+			
+		<!-- Normal Map -->
+		<page type="custom">
+			<title>Normal Map</title>
+			<subtitle>Specify the normal map that is applied to the model.</subtitle>
+			<input type="source" source="normal" name="normal" />
+		</page>
+			
+		<!-- Parallax Map -->
+		<page type="custom">
+			<title>Parallax &amp; Tesselation Displacement Map</title>
+			<subtitle>Specify the parallax or tesselation displacement map that is applied to the model.</subtitle>
+			<input type="source" source="height" name="height" />
+			<spacer />
+			
+			<!-- Calculation -->
+			<input type="float" default="0.1" name="height.multiplier">
+				<dependency source="height.type" value="none" inverse="true" />
+				<caption>Multiplier</caption>
+			</input>
+			
+			<!-- Algorithm -->
+			<input type="stack" name="height.algorithm" default="parallax">
+				<dependency source="height.type" value="none" inverse="true" />
+				<caption>Algorithm</caption>
+				<item type="parallax">
+					<caption>Simple Parallax Mapping</caption>
+				</item>
+				<item type="steep">
+					<caption>Steep Parallax Mapping</caption>
+					<spacer />
+					<input type="int" default="8" name="steep.minLayers">
+						<caption>Minimum Layers</caption>
+					</input>
+					<input type="int" default="16" name="steep.maxLayers">
+						<caption>Maximum Layers</caption>
+					</input>
+					<input type="bool" default="true" name="steep.interpolate">
+						<caption>Interpolate result between layers</caption>
+					</input>
+				</item>
+				<item type="tesselation">
+					<caption>Tesselation Displacement Mapping</caption>
+					<input type="int" default="8.0" name="occlusion.minLayers">
+						<caption>Inner Tesselation</caption>
+					</input>
+					<input type="int" default="16.0" name="occlusion.maxLayers">
+						<caption>Outer Tesselation</caption>
+					</input>
+				</item>
+			</input>
+		</page>
+		
+		<!-- Light Source -->
+		<page type="source" source="light" name="light">
+			<dependency source="scene" value="single" />
+			<title>Light Source</title>
+			<subtitle>Configure the light source that is used for shading.</subtitle>
+		</page>
+		
+		<!-- Light Sources -->
+		<page type="items" name="lights">
+			<dependency source="scene" value="multi" />
+			<title>Light Sources</title>
+			<subtitle>Configure the light sources that are used for shading.</subtitle>
+			<item type="source" naming="light">
+				<caption>Light Source</caption>
+				<spacer />
+				<input type="source" source="light" name="light" mandatory="true" />
+			</item>
+		</page>
+		
+		<!-- General -->
+		<page type="custom">
+			<title>Shader</title>
+			<subtitle>Specify the basic shader configuration.</subtitle>
+			<input type="select" default="eye" name="lightingSpace">
+				<caption>Lighting Space</caption>
+				<description>Specify the vector space that is used between vertex and fragment shader.</description>
+				<option value="eye">Eye Space</option>
+				<option value="world">World Space</option>
+			</input>
+			<input type="select" default="fragment" name="targetShader">
+				<dependency source="normal.type" value="none" />
+				<dependency source="height.type" value="none" />
+				<caption>BRDF Shader</caption>
+				<description>Select the shader that will perform the BRDF calculation.</description>
+				<option value="vertex">Vertex Shader (Blend Colors)</option>
+				<option value="fragment">Fragment Shader (Blend Normals)</option>
+			</input>
+			<spacer />
+			
+			<input type="bool" default="true" name="enableCamera">
+				<caption>Enable camera</caption>
+				<description>If checked, a camera block is generated and connected to the model view projection uniform.</description>
+			</input>
+			<input type="bool" default="false" name="autoRotate">
+				<caption>Auto rotate model</caption>
+				<description>If checked, the model is being rotated.</description>
+			</input>
+			<input type="float" default="0.2" name="rotationSpeed">
+				<dependency source="autoRotate" value="true" />
+				<caption>Rotation Speed</caption>
+			</input>
+			<spacer />
+			<input type="bool" default="false" name="lightRotate">
+				<caption>Auto circulate light(s)</caption>
+				<description>If checked, the light is being circulated around the center.</description>
+			</input>
+			<input type="float" default="0.2" name="lightSpeed">
+				<dependency source="lightRotate" value="true" />
+				<caption>Movement Speed</caption>
+			</input>
+		</page>
+		
+		<!-- Specular -->
+		<page type="custom">
+			<title>Specular</title>
+			<subtitle>Configure the specular part of the BRDF that is applied to the model.</subtitle>
+			<input type="bool" name="metal">
+				<caption>Use metal material</caption>
+			</input>
+			<input type="stack" name="specular" default="phong">
+				<caption>Specular Model</caption>
+				<item type="phong" include="brdf/phong.xml" />
+				<item type="wardanisotropy" include="brdf/wardanisotropy.xml" />
+				<item type="microfacet" include="brdf/microfacet.xml" />
+			</input>
+		</page>
+			
+		<!-- BRDF -->
+		<page type="custom">
+			<title>Diffuse</title>
+			<subtitle>Configure the diffuse part of the BRDF that is applied to the model.</subtitle>
+			<dependency source="metal" value="false" />
+			<input type="stack" name="diffuse" default="lambert">
+				<caption>Diffuse Model</caption>
+				<item type="lambert" include="brdf/lambert.xml" />
+				<item type="minnaert" include="brdf/minnaert.xml" />
+				<item type="orennayar" include="brdf/orennayar.xml" />
+				<item type="disney" include="brdf/disney.xml" />
+			</input>
+		</page>
+		
+		<!-- Output -->
+		<page type="output" name="output">
+			<title>Output</title>
+			<subtitle>Configure the outputs of the render pass.</subtitle>
+			<output output="display" default="true" />
+			<output output="texture" />
+		</page>
+		
+	</pages>
+</projectWizard>

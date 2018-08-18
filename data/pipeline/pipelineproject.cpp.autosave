@@ -1,0 +1,372 @@
+#include "pipelineproject.h"
+#include "pipelinemanager.h"
+#include "data/common/dataexceptions.h"
+#include "data/common/compr/ziparchive.h"
+#include "data/blocks/connectionlist.h"
+#include "data/blocks/connection.h"
+#include "data/blocks/port.h"
+#include "data/pipeline/visitors/assetspipelinevisitor.h"
+
+#include <stdexcept>
+#include <QTextStream>
+#include <QXmlStreamReader>
+#include <QFileInfo>
+#include <QTemporaryDir>
+
+#include <QDebug>
+
+namespace ysm
+{
+	unsigned int PipelineProject::_projectFileVersion = 100;
+
+	static PipelineProject::loadProject(QStringList& messages, bool import, QVector<ISerializable*>* additionalObjects)
+	{
+		if (_projectFile.isEmpty())
+			throw std::invalid_argument{"No project file has been set"};
+
+		bool ret = false;
+
+		// Determine the file format (compressed/regular) by looking at the first two bytes
+		QFile file{_projectFile};
+
+		if (file.open(QIODevice::ReadOnly))
+		{
+			char buffer[2];
+
+			file.read(buffer, 2);
+			file.close();
+
+			bool loadProject = false;
+
+			// Zip archives begin with PK
+			if (buffer[0] == 'P' && buffer[1] == 'K')
+			{
+				// Extract
+				ZipArchive arch;
+				QFileInfo fi{_projectFile};
+
+				if (arch.openZip(_projectFile, ZipArchive::ModeUnpack))
+				{
+					if (arch.unpackContents(fi.dir().absolutePath()))
+						loadProject = true;
+					else
+						messages << "Unable to extract the compressed project archive";
+				}
+				else
+					messages << "Unable to open the compressed project archive";
+
+				// The project has been extracted, and we will use the extracted files from now on
+				_projectFile.replace(fi.completeSuffix(), "ysm");
+			}
+			else
+				loadProject = true;
+
+			if (loadProject)
+				ret = load(messages, import, additionalObjects);
+		}
+
+		return ret;
+	}
+
+	bool PipelineProject::storeProject(QStringList& messages, bool exportAssets, bool compressProject, QVector<ISerializable*>* additionalObjects)
+	{
+		bool ret = false;
+
+		// Check whether we should create a compressed archive
+		if (compressProject)
+		{
+			QString oldProjectFile = _projectFile;
+			QTemporaryDir tempDir{QDir::temp().absoluteFilePath("YSMProject")};
+			QFileInfo fi{_projectFile};
+
+			// The project file and assets will be stored in a temporary directory
+			_projectFile = QFileInfo(tempDir.path(), fi.fileName()).absoluteFilePath();
+			_projectFile.replace(fi.completeSuffix(), "ysm");
+
+			if (store(messages, exportAssets, additionalObjects))
+			{
+				ZipArchive arch;
+
+				if (arch.openZip(oldProjectFile, ZipArchive::ModePack))
+				{
+					if (arch.addDirectory(tempDir.path()))
+						ret = true;
+					else
+						messages << "Unable to add the project files to the archive";
+				}
+				else
+					messages << "Unable to create the compressed project archive";
+			}
+
+			_projectFile = oldProjectFile;
+		}
+		else
+			ret = store(messages, exportAssets, additionalObjects);
+
+		return ret;
+	}
+
+	bool PipelineProject::store(QStringList& messages, bool exportAssets, QVector<ISerializable*>* additionalObjects)
+	{
+		PipelineManager* pipelineManager = PipelineManager::getInstance();
+
+		if (_projectFile.isEmpty())
+			throw std::invalid_argument{"No project file has been set"};
+
+		if (exportAssets)
+		{
+			if (!storeAssets(messages))
+				return false;
+		}
+
+		// Create the basic XML document
+		QDomDocument xml;
+		QDomElement root = xml.createElement("YSMProject");
+
+		xml.appendChild(root);
+
+		// For future use
+		root.setAttribute("fileVersion", _projectFileVersion);
+
+		// Serialize everything
+		SerializationContext ctx(&xml, &root);
+		bool success = true;
+
+		ctx.initContext(getProjectDir(), getAssetsDir());
+
+		// Pipeline items already have unique IDs, so use those
+		ctx.poolPipelineItems(pipelineManager);
+
+		try
+		{
+			// Serialize all pipelines
+			pipelineManager->serialize(&root, &ctx);
+
+			// Serialize additional objects
+			if (additionalObjects)
+				storeAdditionalObjects(&root, &ctx, additionalObjects);
+		}
+		catch (std::exception& excp)
+		{
+			messages << excp.what();
+			success = false;
+		}
+
+		messages << ctx.getMessages();
+
+		if (success)
+		{
+			// Done, write the document
+			QFile file(_projectFile);
+
+			if (file.open(QIODevice::WriteOnly|QIODevice::Text|QIODevice::Truncate))
+			{
+				QTextStream out(&file);
+				out << xml.toString(4);
+			}
+			else
+			{
+				messages << "The project file could not be created";
+				success = false;
+			}
+		}
+
+		return success;
+	}
+
+	bool PipelineProject::load(QStringList& messages, bool import, QVector<ISerializable*>* additionalObjects)
+	{
+		// TODO: Check compressed (header oder so, oder endung); entpacken ins dir des files und dort belassen
+		PipelineManager* pipelineManager = PipelineManager::getInstance();
+
+		if (_projectFile.isEmpty())
+			throw std::invalid_argument{"No project file has been set"};
+
+		// Load the XML document
+		QDomDocument xml;
+		QFile file(_projectFile);
+
+		if (!file.open(QIODevice::ReadOnly|QIODevice::Text))
+		{
+			messages << "The project file could not be loaded";
+			return false;
+		}
+
+		bool ret = xml.setContent(&file);
+
+		file.close();
+
+		if (!ret)
+		{
+			messages << "The project file doesn't seem to be valid";
+			return false;
+		}
+
+		// Deserialize everything
+		QDomElement root = xml.documentElement();
+		SerializationContext ctx(&xml, &root);
+		unsigned int offsetID = 0;
+		bool success = true;
+
+		// When importing, we must offset all loaded IDs
+		if (import)
+			offsetID = pipelineManager->getHighestItemID();
+
+		ctx.initContext(getProjectDir(), getAssetsDir(), offsetID, import);
+
+		try
+		{			
+			// Override the highest item ID, so no conflicts occur when new pipeline items were introduced after the project's current file format
+			pipelineManager->setHighestItemID(getHighestObjectID() + offsetID);
+
+			// Deserialize all pipelines
+			pipelineManager->deserialize(&root, &ctx);
+
+			// All deferred elements need to be processed after the main deserialization has been done
+			ctx.processDeferredElements();
+
+			// Deserialize additional objects
+			if (additionalObjects && !import)
+				loadAdditionalObjects(&root, &ctx, additionalObjects);
+		}
+		catch (std::exception& excp)
+		{
+			messages << excp.what();
+			success = false;
+		}
+
+		messages << ctx.getMessages();
+
+		return success;
+	}
+
+	void PipelineProject::loadAdditionalObjects(QDomElement* xmlElement, SerializationContext* ctx, QVector<ISerializable*>* additionalObjects)
+	{
+		QDomElement elem = xmlElement->firstChildElement("Additional");
+
+		if (!elem.isNull())
+		{
+			for (ISerializable* serObj : *additionalObjects)
+				serObj->deserialize(&elem, ctx);
+		}
+	}
+
+	void PipelineProject::storeAdditionalObjects(QDomElement* xmlElement, SerializationContext* ctx, QVector<ISerializable*>* additionalObjects)
+	{
+		QDomElement elem = ctx->createElement("Additional");
+
+		xmlElement->appendChild(elem);
+
+		for (ISerializable* serObj : *additionalObjects)
+			serObj->serialize(&elem, ctx);
+	}
+
+	unsigned int PipelineProject::getHighestObjectID()
+	{
+		unsigned int id = 0;
+		QFile file(_projectFile);
+
+		if (file.open(QIODevice::ReadOnly|QIODevice::Text))
+		{
+			QXmlStreamReader reader(file.readAll());
+
+			file.close();
+
+			// Iterate over all elements in the project file, finding the highest object ID
+			while (!reader.atEnd())
+			{
+				reader.readNext();
+
+				if (!reader.isStartElement())
+					continue;
+
+				// Skip all non-pipeline items
+				if (reader.name().compare("property", Qt::CaseInsensitive) != 0 && reader.name().compare("pipeline", Qt::CaseInsensitive) != 0)
+				{
+					for (const QXmlStreamAttribute &attr : reader.attributes())
+					{
+						if (attr.name().toString() == "id")
+						{
+							unsigned int v = attr.value().toUInt();
+
+							if (v > id)
+								id = v;
+						}
+					}
+				}
+			}
+		}
+
+		return id;
+	}
+
+	QDir PipelineProject::getProjectDir() const
+	{
+		if (_projectFile.isEmpty())
+			throw std::invalid_argument{"No project file has been set"};
+
+		QFileInfo fi{_projectFile};
+		return fi.dir();
+	}
+
+	QDir PipelineProject::getAssetsDir() const
+	{
+		if (_projectFile.isEmpty())
+			throw std::invalid_argument{"No project file has been set"};
+
+		QFileInfo fi{_projectFile};
+		QDir dir = fi.dir();
+
+		// The assets directory name consists of the project file name (w/o spaces) + ".assets"
+		QString assetsDir = fi.fileName();
+		assetsDir.replace(" ", "");
+		assetsDir+= ".assets";
+
+		QFileInfo fullDir{dir, assetsDir};
+		return QDir{fullDir.absoluteFilePath()};
+	}
+
+	bool PipelineProject::storeAssets(QStringList& messages)
+	{
+		QDir assetsDir{getAssetsDir()};
+
+		// First, create the assets directory
+		assetsDir.mkpath(".");
+
+		// Assemble all assets used in the project
+		PipelineManager* pipelineManager = PipelineManager::getInstance();
+		AssetsPipelineVisitor visitor;
+
+		pipelineManager->takeVisitor(&visitor);
+
+		QStringList assetFiles = visitor.getAssetFiles();
+		QDir projDir = getProjectDir();
+
+		// Copy each file
+		for (QString file : assetFiles)
+		{
+			if (file.trimmed().isEmpty())
+				continue;
+
+			if (!storeAsset(file, assetsDir))
+			{
+				messages << QString("The asset '%1' could not be copied to '%2'").arg(file).arg(assetsDir.canonicalPath());
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool PipelineProject::storeAsset(const QString& srcAsset, const QDir& assetsDir)
+	{
+		QFileInfo fi{srcAsset};
+		QString destAsset = assetsDir.absoluteFilePath(fi.fileName());
+
+		// Remove any pre-existing file with the same name (might be optimized later)
+		QFile::remove(destAsset);
+
+		// Finally, copy the asset
+		return QFile::copy(srcAsset, destAsset);
+	}
+}

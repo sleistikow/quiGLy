@@ -1,0 +1,21 @@
+//Calculated TBN matrix.
+mat3 tbnMatrix;
+
+//Calculate the TBN matrix.
+void calculateTBN()
+{
+    //Calculate deltas.
+	vec3 dp1 = dFdx(vPositions);
+	vec3 dp2 = dFdy(vPositions);
+	vec2 dt1 = dFdx(vTexture);
+	vec2 dt2 = dFdy(vTexture);
+ 
+    //Calculate tangent and bitangent.
+	vec3 alpha = cross(dp2, normal);
+	vec3 beta = cross(normal, dp1);
+	tangent = normalize(alpha * dt1.x + beta * dt2.x);
+	bitangent = normalize(alpha * dt1.y + beta * dt2.y);
+
+	//Build the matrix.
+	tbnMatrix = transpose(mat3(tangent, bitangent, normal));
+}

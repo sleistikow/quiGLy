@@ -1,0 +1,24 @@
+<source primary="type" disable="none">
+	<caption>Normal Map: [:file]</caption>
+	
+	<!-- Data Source -->
+	<input type="select" default="image" name="type">	
+		<caption>Normal Map</caption>
+		<option value="none">None</option>
+		<option value="image">File</option>
+	</input>
+	
+	<!-- Image File -->
+	<input type="file" name="file" mandatory="true">
+		<caption>Image File</caption>
+		<format extension="bmp">Windows Bitmap</format>
+		<format extension="gif">Graphic Interchange Format</format>
+		<format extension="jpg|jpeg">Joint Photographic Experts Group</format>
+		<format extension="png">Portable Network Graphics</format>
+		<format extension="pbm">Portable Bitmap</format>
+		<format extension="pgm">Portable Graymap</format>
+		<format extension="ppm">Portable Pixmap</format>
+		<format extension="xbm|xpm">X11 Pixmap</format>
+	</input>
+	
+</source>

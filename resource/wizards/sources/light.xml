@@ -1,0 +1,31 @@
+<source primary="type" disable="none">
+	<caption>[:type]</caption>
+		
+	<!-- Properties -->
+	<input type="select" default="point" name="type">	
+		<caption>Light Source</caption>
+		<option value="none">No Light</option>
+		<option value="point">Point Light</option>
+		<option value="spot">Spot Light</option>
+	</input>
+	<input type="vec3" name="position" default="2;10;6">
+		<caption>Position</caption>
+	</input>
+	<input type="vec3" name="direction" default="0;0;0">
+		<dependency source="type" value="spot" />
+		<caption>Direction</caption>
+	</input>
+	<spacer />
+	
+	<!-- Color -->
+	<input type="color" name="ambient" default="0.1;0.1;0.1;1.0">
+		<caption>Ambient</caption>
+	</input>
+	<input type="color" name="diffuse" default="0.5;0.5;0.5;1.0">
+		<caption>Diffuse</caption>
+	</input>
+	<input type="color" name="specular" default="0.9;0.9;0.9;1.0">
+		<caption>Specular</caption>
+	</input>
+	
+</source>

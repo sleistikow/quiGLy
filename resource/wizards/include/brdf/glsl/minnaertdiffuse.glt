@@ -1,0 +1,8 @@
+//Calculate diffuse using Minnaert.
+float diffuseMinnaert(float roughness)
+{	
+	return pow(NdotL, roughness) * pow(NdotV, roughness - 1) / M_PI;
+}
+
+//Convencience diffuse method.
+float calculateDiffuse() { return diffuseMinnaert([value:this.roughness]); }

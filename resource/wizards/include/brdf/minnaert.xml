@@ -1,0 +1,10 @@
+<item>
+	<caption>Minnaert</caption>
+	
+	<!-- Parameter -->
+	<input type="float" name="minnaert.roughness" default="1.6">
+		<caption>Roughness</caption>
+		<description>The roughness exponent.</description>
+	</input>
+	
+</item>

@@ -1,0 +1,63 @@
+<syntaxHighlighter>
+
+	<!-- 1 - Numbers RED -->
+	<highlighter>
+		<type>number</type>
+		<fontColor>#FF0000</fontColor>
+	</highlighter>
+
+	<!-- 2 - Data GREEN -->
+	<highlighter>
+		<type>datatype</type>
+		<fontColor>#00AA00</fontColor>
+		<fontWeight>75</fontWeight>
+	</highlighter>
+	<highlighter>
+		<type>qualifier</type>
+		<fontColor>#338833</fontColor>
+	</highlighter>
+
+	<!-- 2 - Builtin PINK -->
+	<highlighter>
+		<type>builtin</type>
+		<fontColor>#990088</fontColor>
+		<fontStyle>1</fontStyle>
+	</highlighter>
+	<highlighter>
+		<type>function</type>
+		<fontColor>#DD00CC</fontColor>
+		<fontStyle>1</fontStyle>
+	</highlighter>
+	<highlighter>
+		<type>constant</type>
+		<fontColor>#995588</fontColor>
+		<fontStyle>1</fontStyle>
+	</highlighter>
+
+	<!-- 2 - Structural BLUE -->
+	<highlighter>
+		<type>structural</type>
+		<fontColor>#0000FF</fontColor>
+		<fontWeight>75</fontWeight>
+	</highlighter>
+
+	<!-- 3 - Preprocessor DUST -->
+	<highlighter>
+		<type>preprocessor</type>
+		<fontColor>#BD7F2D</fontColor>
+		<fontWeight>75</fontWeight>
+	</highlighter>
+
+	<!-- 4 - Comments: LIGHT -->
+	<highlighter>
+		<type>comment</type>
+		<fontColor>#888888</fontColor>
+	</highlighter>
+
+	<!-- 5 - quiGLy Comments: LIGHT BLUE -->
+	<highlighter>
+		<type>quiGLy</type>
+		<fontColor>#8888FF</fontColor>
+	</highlighter>
+
+</syntaxHighlighter>

@@ -1,0 +1,145 @@
+#define M_PI 3.141592
+#define M_ZERO 0.000001
+
+out vec2 vTexture;
+
+[if:targetShader=vertex]
+vec3 vPositions;
+vec3 vNormals;
+
+vec3 vEyePosition;
+[if:scene=single]
+vec3 vLightPosition;
+[else:]
+	[each:lights]
+vec3 vLightPosition[value:lights.index];
+	[endeach:]
+[endif:]
+out vec4 vColor;
+
+//Calculated normals.
+vec3 normal;
+
+[include:brdf/glsl/brdf.glt]
+
+[else:]
+out vec3 vPositions;
+out vec3 vNormals;
+
+out vec3 vEyePosition;
+[if:scene=single]
+out vec3 vLightPosition;
+[else:]
+	[each:lights]
+out vec3 vLightPosition[value:lights.index];
+	[endeach:]
+[endif:]
+
+[endif:]
+[if:autoRotate=true|lightRotate=true]
+//Helper function, rotates object by y axis.
+mat4 rotationMatrix(float angle)
+{
+	float s = sin(angle);
+	float c = cos(angle);
+	
+	return mat4
+	(
+		  c, 0.0,   s, 0.0,
+		0.0, 1.0, 0.0, 0.0,
+		 -s, 0.0,   c, 0.0,
+		0.0, 0.0, 0.0, 1.0
+	);
+}
+
+[endif:]
+//Main entry point.
+void main()
+{
+[if:autoRotate=true]
+	//Calculate rotated model matrix.
+	float modelAngle = (time * 0.001) * (2 * M_PI) * [value:rotationSpeed];
+	mat4 modelMatrix = modelMatrix * rotationMatrix(modelAngle);
+
+[endif:]
+	//Calculate light translation.
+[if:lightRotate=true]
+	float lightAngle = (time * 0.001) * (2 * M_PI) * [value:lightSpeed];
+	mat4 lightMatrix = rotationMatrix(lightAngle);
+[else:]
+	mat4 lightMatrix = mat4(1.0);
+[endif:]
+[if:lightingSpace=eye]
+	lightMatrix = viewMatrix * lightMatrix;
+[endif:]
+
+	//Translate light to calculated space.
+[if:scene=single]
+	vec4 tmpLightPosition = viewMatrix * lightMatrix * lightPosition;
+	vLightPosition = tmpLightPosition.xyz / tmpLightPosition.w;
+[else:]
+	[each:lights]
+	vec4 tmpLightPosition[value:lights.index] = lightMatrix * lightPosition[value:lights.index];
+	vLightPosition[value:lights.index] = tmpLightPosition[value:lights.index].xyz / tmpLightPosition[value:lights.index].w;
+	[endeach:]
+[endif:]
+	
+[if:lightingSpace=eye]
+	//Calculate the eye space translation matrix.
+	mat4 spaceMatrix = viewMatrix * modelMatrix;
+	
+	//Eye is origin in eye space.
+	vEyePosition = vec3(0);
+	
+[else:]
+	//Calculate the world space translation matrix.
+	mat4 spaceMatrix = modelMatrix;
+	
+	//Translate eye to world space.
+	vec4 tmpEyePosition = inverse(viewMatrix) * vec4(0, 0, 0, 1.0);
+	vEyePosition = tmpEyePosition.xyz / tmpEyePosition.w;
+	
+[endif:]
+	//Translate the vertex positions to lighting space.
+	vec4 tmpPositions = spaceMatrix * vec4(inPositions, 1.0);
+	vPositions = tmpPositions.xyz / tmpPositions.w;
+	
+	//Translate the vertex normals to lighting space.
+	mat3 normalMatrix = mat3(inverse(transpose(spaceMatrix)));
+	vNormals = normalize(normalMatrix * inNormals);
+	
+[if:targetShader=vertex]
+	//Use calculated normal for BRDF.
+	normal = vNormals;
+
+	[if:scene=single]
+	//Calculate the directional vectors.
+	calculateDirections(vEyePosition, vLightPosition);
+	calculateAngles();
+	
+	//Calculate the color depending on light and eye position.
+	vColor = calculateBRDF(lightSpecular, lightDiffuse, lightAmbient);
+	[else:]
+	//Base color.
+	vColor = vec4(0);
+	
+		[each:lights]
+	{
+		//Calculate the directional vectors.
+		calculateDirections(vEyePosition, vLightPosition[value:lights.index]);
+		calculateAngles();
+		
+		//Run the current BRDF.
+		vColor += calculateBRDF(lightSpecular[value:lights.index], lightDiffuse[value:lights.index], lightAmbient[value:lights.index]);
+	}
+	
+		[endeach:]
+	[endif:]
+	
+[endif:]
+	//Forward texture coordinates.
+	vTexture = inTexture.xy;
+
+	//Calculate the vertex position.
+	gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(inPositions, 1.0);
+}

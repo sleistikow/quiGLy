@@ -1,0 +1,10 @@
+out vec2 vTexture;	
+
+void main()
+{
+	//Forward the vertex data.
+	vTexture = inTexture.xy;
+
+	//Calculate the vertex position.
+	gl_Position = vec4(inPositions, 1.0);
+}

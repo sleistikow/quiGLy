@@ -1,0 +1,16 @@
+<output>
+	<caption>Render to display</caption>
+	
+	<!-- Gamma Correction -->
+	<input type="select" default="manual" name="gammaCorrection">
+		<caption>Gamma Correction</caption>
+		<option value="none">Disable</option>
+		<option value="auto">Use sRGB Format</option>
+		<option value="manual">Manual Calculation</option>
+	</input>
+	<input type="float" default="2.2" name="gammaValue">
+		<dependency source="gammaCorrection" value="manual" />
+		<caption>Gamma</caption>
+	</input>
+	
+</output>

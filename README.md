@@ -14,7 +14,7 @@ It might actually be quite useful for students or people who want to or need to 
 * etc..
 
 Currently, no documentation is provided but will be added as soon as possible.
-Meanwhile, you might have a have a look at the provided project wizard, available from the toolbar.
+Meanwhile, you might have a look at the provided project wizard, available from the toolbar.
 It might help you configuring your own pipelines.
 
 ### NOTE: quiGLy is not well-tested and is still very much in development stage.
@@ -22,7 +22,7 @@ It might help you configuring your own pipelines.
 ## Usage
 
 Once quiGLy has been started, the application shows a single view with several components.
-TBD.
+Application images and documentation will follow soon.
 
 ## Build
 
@@ -34,7 +34,7 @@ Required dependencies:
 Included libraries:
 * GLI (https://gli.g-truc.net/0.8.2/index.html)
 * GLM (https://glm.g-truc.net/0.9.9/index.html)
-* minizip(http://www.winimage.com/zLibDll/minizip.html)
+* minizip (http://www.winimage.com/zLibDll/minizip.html)
 
 The project was developed on and therefore should work on GNU/Linux, Windows as well as macOS.
 Simply install the required dependencies and run the cmake script.

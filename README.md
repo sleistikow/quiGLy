@@ -1,6 +1,9 @@
 quiGLy - Quickly prototype OpenGL
 =================================
 
+![simple_scene](https://github.com/user-attachments/assets/310409cf-0528-4839-aafd-a670f6b5ac4f)
+
+
 About
 -----
 
